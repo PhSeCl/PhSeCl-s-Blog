@@ -1,2 +1,20 @@
-[]
-
+[
+  {
+    "name": "示例友链",
+    "description": "一个有趣的博客",
+    "url": "https://example.com",
+    "avatar": "/images/friends/example.webp"
+  },
+  {
+    "name": "Night Garden",
+    "description": "记录设计、音乐和深夜随笔的个人站点",
+    "url": "https://example.com/night-garden",
+    "avatar": "/images/friends/night-garden.webp"
+  },
+  {
+    "name": "Canvas Lab",
+    "description": "专注于创意前端和视觉实验的技术博客",
+    "url": "https://example.com/canvas-lab",
+    "avatar": "/images/friends/canvas-lab.webp"
+  }
+]

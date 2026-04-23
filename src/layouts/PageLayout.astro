@@ -4,14 +4,76 @@ import BaseLayout from './BaseLayout.astro';
 interface Props {
   title?: string;
   description?: string;
+  titleKey: string;
+  titleFallback: string;
 }
 
-const { title = 'Page', description = 'Page layout placeholder' } = Astro.props;
+const {
+  title = 'Page',
+  description = 'Page layout',
+  titleKey,
+  titleFallback,
+} = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
-  <main>
-    <slot />
+  <main class="page-layout">
+    <section class="page-shell">
+      <header class="page-header">
+        <h1 data-i18n={titleKey}>{titleFallback}</h1>
+        <div class="line"></div>
+      </header>
+
+      <div class="page-content">
+        <slot />
+      </div>
+    </section>
   </main>
 </BaseLayout>
 
+<style>
+  .page-layout {
+    padding: 7rem 1.5rem 5rem;
+  }
+
+  .page-shell {
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .page-header h1 {
+    margin: 0;
+    color: var(--sakura-100);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+
+  .page-header .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(220, 160, 190, 0.22), transparent);
+  }
+
+  .page-content {
+    max-width: 64rem;
+  }
+
+  @media (max-width: 767px) {
+    .page-layout {
+      padding-top: 6rem;
+    }
+
+    .page-header {
+      gap: 1rem;
+    }
+  }
+</style>

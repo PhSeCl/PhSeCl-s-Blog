@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Giscus from '../components/Giscus.astro';
 import { formatBlogDate, type BlogEntry } from '../utils/blog';
 
 interface Props {
@@ -55,7 +56,7 @@ const { post, previous, next } = Astro.props;
         </div>
       </nav>
 
-      <!-- Giscus 评论将在下一阶段接入 -->
+      <Giscus />
     </article>
   </main>
 </BaseLayout>

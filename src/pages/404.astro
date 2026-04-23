@@ -1,11 +1,68 @@
 ---
-import PageLayout from '../layouts/PageLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<PageLayout title="404 — PhSeCl" description="Page not found">
-  <section class="mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-6 text-center">
-    <p class="font-ui text-sm uppercase tracking-[0.4em] text-text-muted">PhSeCl</p>
-    <h1 class="mt-4 font-display text-7xl text-sakura-100">404</h1>
-  </section>
-</PageLayout>
+<BaseLayout title="404 — PhSeCl" description="Page not found">
+  <main class="notfound-layout">
+    <section class="notfound-shell">
+      <p class="notfound-code" data-i18n="page.notfound">404</p>
+      <p class="notfound-copy" data-i18n="notfound.message">
+        ページが見つかりません — 这片花瓣飘到了不存在的地方
+      </p>
+      <a class="notfound-link" href="/" data-i18n="notfound.back">返回首页</a>
+    </section>
+  </main>
+</BaseLayout>
 
+<style>
+  .notfound-layout {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .notfound-shell {
+    text-align: center;
+  }
+
+  .notfound-code {
+    margin: 0;
+    color: rgba(245, 184, 204, 0.5);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: clamp(5rem, 16vw, 10rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+  }
+
+  .notfound-copy {
+    margin: 1rem auto 2rem;
+    max-width: 40rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    line-height: 1.9;
+  }
+
+  .notfound-link {
+    display: inline-block;
+    padding: 0.8rem 1.3rem;
+    border: 1px solid rgba(220, 160, 190, 0.22);
+    color: var(--sakura-100);
+    text-decoration: none;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      background 0.3s ease;
+  }
+
+  .notfound-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(245, 184, 204, 0.38);
+    background: rgba(160, 64, 96, 0.12);
+  }
+</style>

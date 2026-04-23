@@ -1,2 +1,94 @@
-<section aria-label="Comments placeholder"></section>
+---
+interface Props {
+  lang?: string;
+}
 
+const { lang = 'zh-CN' } = Astro.props;
+---
+
+<section class="giscus-wrap" aria-label="Comments">
+  <div class="giscus-divider" aria-hidden="true"></div>
+  <div class="giscus-container" data-giscus-root data-giscus-lang={lang}></div>
+</section>
+
+<script>
+  function toGiscusLang(lang: string): string {
+    if (lang === 'ja') {
+      return 'ja';
+    }
+
+    if (lang === 'en') {
+      return 'en';
+    }
+
+    return 'zh-CN';
+  }
+
+  function renderGiscus(lang: string): void {
+    const root = document.querySelector('[data-giscus-root]');
+
+    if (!(root instanceof HTMLDivElement)) {
+      return;
+    }
+
+    root.innerHTML = '';
+
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+
+    // TODO: 填入 GitHub 用户名/仓库名
+    script.setAttribute('data-repo', '');
+    // TODO: 填入 repo ID
+    script.setAttribute('data-repo-id', '');
+    script.setAttribute('data-category', 'Announcements');
+    // TODO: 填入 category ID
+    script.setAttribute('data-category-id', '');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'top');
+    script.setAttribute('data-theme', 'dark');
+    script.setAttribute('data-lang', toGiscusLang(lang));
+
+    root.append(script);
+  }
+
+  function initGiscus(): void {
+    const root = document.querySelector('[data-giscus-root]');
+
+    if (!(root instanceof HTMLDivElement)) {
+      return;
+    }
+
+    if (root.dataset.giscusReady !== 'true') {
+      root.dataset.giscusReady = 'true';
+
+      window.addEventListener('lang-change', (event: Event) => {
+        const detail = (event as CustomEvent<{ lang?: string }>).detail ?? {};
+        renderGiscus(detail.lang ?? document.documentElement.lang);
+      });
+    }
+
+    renderGiscus(document.documentElement.lang || root.dataset.giscusLang || 'zh');
+  }
+
+  document.addEventListener('astro:page-load', initGiscus);
+  document.addEventListener('astro:after-swap', initGiscus);
+  initGiscus();
+</script>
+
+<style>
+  .giscus-wrap {
+    margin-top: 3rem;
+  }
+
+  .giscus-divider {
+    width: 100%;
+    height: 1px;
+    margin-bottom: 2rem;
+    background: linear-gradient(to right, rgba(220, 160, 190, 0.15), transparent);
+  }
+</style>

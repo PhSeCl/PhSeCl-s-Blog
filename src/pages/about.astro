@@ -2,9 +2,210 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="About — PhSeCl" description="About page placeholder">
-  <section class="mx-auto max-w-4xl px-6 py-24">
-    <h1 class="font-display text-4xl text-sakura-100">About</h1>
+<PageLayout
+  title="About — PhSeCl"
+  description="About PhSeCl"
+  titleKey="page.about"
+  titleFallback="ABOUT"
+>
+  <section class="about-intro">
+    <div class="avatar-shell">
+      <div class="avatar-fallback" aria-hidden="true"></div>
+      <img
+        src="/images/avatar.webp"
+        alt="PhSeCl avatar"
+        class="avatar"
+        onerror="this.classList.add('is-hidden')"
+      />
+    </div>
+
+    <div class="intro-copy">
+      <p data-i18n="about.intro">
+        在这里，我想把技术、日常、审美和那些深夜里短暂却真实的想法，慢慢整理成可以回看的文字。
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <h2 data-i18n="about.skills">兴趣 / Skills</h2>
+    <div class="tag-list">
+      <span>TypeScript</span>
+      <span>Astro</span>
+      <span>Canvas</span>
+      <span>日本語</span>
+      <span>音楽</span>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <h2 data-i18n="about.timeline">歩いてきた道</h2>
+    <div class="timeline">
+      <article class="timeline-item">
+        <div class="year">2025</div>
+        <div class="content">
+          <h3>PhSeCl Blog Rebuild</h3>
+          <p>用 Astro 重构个人站，整理写作、作品和长期维护的结构基础。</p>
+        </div>
+      </article>
+      <article class="timeline-item">
+        <div class="year">2024</div>
+        <div class="content">
+          <h3>Creative Frontend Experiments</h3>
+          <p>开始更系统地探索 Canvas、动效表达和偏氛围化的网页叙事。</p>
+        </div>
+      </article>
+      <article class="timeline-item">
+        <div class="year">Future</div>
+        <div class="content">
+          <h3>More notes, more works</h3>
+          <p><!-- 后续将在这里扩展更完整的时间线内容 --></p>
+        </div>
+      </article>
+    </div>
   </section>
 </PageLayout>
 
+<style>
+  .about-intro {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 3rem;
+  }
+
+  .avatar-shell {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+
+  .avatar-fallback,
+  .avatar {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+  }
+
+  .avatar-fallback {
+    background: radial-gradient(circle at 30% 30%, rgba(245, 184, 204, 0.8), rgba(122, 46, 74, 0.65));
+  }
+
+  .avatar {
+    object-fit: cover;
+    border: 1px solid rgba(220, 160, 190, 0.16);
+  }
+
+  .avatar.is-hidden {
+    opacity: 0;
+  }
+
+  .intro-copy p {
+    margin: 0;
+    color: rgba(224, 198, 210, 0.78);
+    line-height: 1.95;
+  }
+
+  .about-section {
+    margin-top: 3rem;
+  }
+
+  .about-section h2 {
+    margin: 0 0 1rem;
+    color: var(--sakura-100);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .tag-list span {
+    border: 1px solid rgba(160, 60, 100, 0.2);
+    border-radius: 2px;
+    padding: 0.28em 0.9em;
+    color: var(--sakura-300);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.35rem;
+    top: 0.3rem;
+    bottom: 0.3rem;
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(220, 160, 190, 0.25), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0 0 1.5rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.2rem;
+    top: 0.35rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--sakura-400);
+    box-shadow: 0 0 16px rgba(212, 120, 154, 0.25);
+  }
+
+  .timeline .year {
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .timeline .content h3 {
+    margin: 0 0 0.4rem;
+    color: var(--sakura-100);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .timeline .content p {
+    margin: 0;
+    color: rgba(210, 180, 194, 0.68);
+    line-height: 1.85;
+  }
+
+  @media (max-width: 767px) {
+    .about-intro {
+      grid-template-columns: 1fr;
+    }
+
+    .avatar-shell {
+      margin: 0 auto;
+    }
+
+    .timeline-item {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+  }
+</style>
