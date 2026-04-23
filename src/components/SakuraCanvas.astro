@@ -1,2 +1,53 @@
-<canvas id="sakuraCanvas" aria-hidden="true"></canvas>
+<canvas id="sakuraCanvas" aria-hidden="true" transition:persist></canvas>
 
+<style>
+  #sakuraCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  import { DEFAULT_PETAL_COLORS, SakuraController } from '../scripts/sakura';
+
+  declare global {
+    interface Window {
+      __phseclSakura?: SakuraController;
+    }
+  }
+
+  function initSakura() {
+    const canvas = document.getElementById('sakuraCanvas');
+
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      return;
+    }
+
+    if (window.__phseclSakura) {
+      window.__phseclSakura.setCanvas(canvas);
+      window.__phseclSakura.updateConfig({
+        viewportWidth: window.innerWidth,
+        colors: [...DEFAULT_PETAL_COLORS],
+      });
+      window.__phseclSakura.start();
+      return;
+    }
+
+    const controller = new SakuraController(canvas, {
+      viewportWidth: window.innerWidth,
+      colors: [...DEFAULT_PETAL_COLORS],
+      interactionRadius: 120,
+    });
+
+    controller.start();
+    window.__phseclSakura = controller;
+  }
+
+  document.addEventListener('astro:page-load', initSakura);
+  document.addEventListener('astro:after-swap', initSakura);
+  initSakura();
+</script>

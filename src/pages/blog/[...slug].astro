@@ -1,10 +1,26 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 
-<BlogPost title="Post — PhSeCl" description="Blog post placeholder">
-  <article class="mx-auto max-w-3xl px-6 py-24">
-    <h1 class="font-display text-4xl text-sakura-100">Post Placeholder</h1>
+<BlogPost title={`${post.data.title} — PhSeCl`} description={post.data.description}>
+  <article class="prose prose-invert prose-sakura mx-auto max-w-3xl px-6 py-24">
+    <h1 class="font-display text-4xl text-sakura-100">{post.data.title}</h1>
+    <p class="font-ui text-sm uppercase tracking-[0.2em] text-text-muted">
+      {post.data.date.toISOString().slice(0, 10)}
+    </p>
+    <Content />
   </article>
 </BlogPost>
-

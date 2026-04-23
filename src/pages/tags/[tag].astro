@@ -1,5 +1,9 @@
 ---
 import PageLayout from '../../layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  return [];
+}
 ---
 
 <PageLayout title="Tag — PhSeCl" description="Tag archive placeholder">
@@ -7,4 +11,3 @@ import PageLayout from '../../layouts/PageLayout.astro';
     <h1 class="font-display text-4xl text-sakura-100">Tag</h1>
   </section>
 </PageLayout>
-

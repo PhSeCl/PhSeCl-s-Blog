@@ -1,28 +1,61 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+import SakuraCanvas from '../components/SakuraCanvas.astro';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
+  lang?: string;
 }
 
 const {
   title = 'PhSeCl',
   description = 'PhSeCl.com personal website',
+  lang = 'zh',
 } = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://phsecl.com');
 ---
 
 <!doctype html>
-<html lang="zh">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ViewTransitions />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/images/og-image.png" />
+    <meta property="og:url" content={canonicalUrl.toString()} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href={canonicalUrl.toString()} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;600&family=Zen+Old+Mincho:wght@400;700&display=swap"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
+    <SakuraCanvas />
     <slot />
+    <div class="global-vignette" aria-hidden="true"></div>
   </body>
 </html>
 
+<style>
+  .global-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 120%, rgba(0, 0, 0, 0.5), transparent 42%),
+      radial-gradient(circle at 50% -20%, rgba(255, 180, 210, 0.07), transparent 38%);
+  }
+</style>
