@@ -1,4 +1,16 @@
 export const ja = {
-  name: '日本語',
-};
-
+  'nav.blog': 'ブログ',
+  'nav.works': '作品',
+  'nav.about': '紹介',
+  'nav.friends': 'リンク',
+  'hero.title': '花が散る、\n言葉が残る。',
+  'hero.subtitle': 'コードと日常の記録。\n技術ブログ & ポートフォリオ',
+  'hero.badge': '桜の庭 — SINCE 2025',
+  'blog.latest': '最新の記事',
+  'blog.readmore': '続きを読む',
+  'footer.powered': 'Powered by Astro',
+  'switcher.current.zh': '中',
+  'switcher.current.ja': '日',
+  'switcher.current.en': 'EN',
+  'switcher.menu': '言語切替',
+} as const;

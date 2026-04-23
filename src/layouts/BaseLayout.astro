@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import SakuraCanvas from '../components/SakuraCanvas.astro';
 import '../styles/global.css';
 
@@ -43,10 +44,23 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://phsecl.c
   </head>
   <body>
     <SakuraCanvas />
+    <LanguageSwitcher />
     <slot />
     <div class="global-vignette" aria-hidden="true"></div>
   </body>
 </html>
+
+<script>
+  import { initI18n } from '../utils/i18n';
+
+  function initTranslations() {
+    initI18n();
+  }
+
+  document.addEventListener('astro:page-load', initTranslations);
+  document.addEventListener('astro:after-swap', initTranslations);
+  initTranslations();
+</script>
 
 <style>
   .global-vignette {

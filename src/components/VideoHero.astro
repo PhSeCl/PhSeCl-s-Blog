@@ -1,9 +1,9 @@
 ---
 const navItems = [
-  { label: 'BLOG', href: '#latest-posts' },
-  { label: 'WORKS', href: '/works' },
-  { label: 'ABOUT', href: '/about' },
-  { label: 'FRIENDS', href: '/friends' },
+  { key: 'nav.blog', fallback: 'BLOG', href: '#latest-posts' },
+  { key: 'nav.works', fallback: 'WORKS', href: '/works' },
+  { key: 'nav.about', fallback: 'ABOUT', href: '/about' },
+  { key: 'nav.friends', fallback: 'FRIENDS', href: '/friends' },
 ];
 
 const socialItems = [
@@ -44,11 +44,12 @@ const socialItems = [
 
   <div class="content-side">
     <div class="content-inner">
-      <div class="site-badge hero-reveal hero-reveal-1">桜の庭 — SINCE 2025</div>
-      <h1 class="hero-title hero-reveal hero-reveal-2">花が散る、<br />言葉が残る。</h1>
-      <p class="hero-subtitle hero-reveal hero-reveal-3">
-        コードと日常の記録。<br />
-        技术博客 &amp; Portfolio
+      <div class="site-badge hero-reveal hero-reveal-1" data-i18n="hero.badge">桜の庭 — SINCE 2025</div>
+      <h1 class="hero-title hero-reveal hero-reveal-2" data-i18n="hero.title">
+        {'花が散る、\n言葉が残る。'}
+      </h1>
+      <p class="hero-subtitle hero-reveal hero-reveal-3" data-i18n="hero.subtitle">
+        {'コードと日常の記録。\n技术博客 & Portfolio'}
       </p>
 
       <nav class="nav-links hero-reveal hero-reveal-4" aria-label="Homepage navigation">
@@ -56,7 +57,7 @@ const socialItems = [
           navItems.map((item) => (
             <a href={item.href}>
               <span class="nav-line"></span>
-              {item.label}
+              <span data-i18n={item.key}>{item.fallback}</span>
             </a>
           ))
         }
@@ -264,6 +265,7 @@ const socialItems = [
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: 0.08em;
+    white-space: pre-line;
     text-shadow: 0 0 80px rgba(220, 150, 180, 0.2);
   }
 
@@ -275,6 +277,7 @@ const socialItems = [
     font-size: clamp(0.85rem, 1.5vw, 1.05rem);
     letter-spacing: 0.2em;
     line-height: 1.8;
+    white-space: pre-line;
   }
 
   .nav-links {

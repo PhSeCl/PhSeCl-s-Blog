@@ -1,2 +1,158 @@
-<div aria-label="Language switcher placeholder"></div>
+<div class="lang-switcher" data-lang-switcher>
+  <button class="lang-trigger" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false">
+    <span data-lang-current>中</span>
+  </button>
 
+  <div class="lang-menu" data-lang-menu hidden>
+    <button class="lang-option" type="button" data-lang-option="zh">中文</button>
+    <button class="lang-option" type="button" data-lang-option="ja">日本語</button>
+    <button class="lang-option" type="button" data-lang-option="en">English</button>
+  </div>
+</div>
+
+<script>
+  import { getLang, setLang, t } from '../utils/i18n';
+  import type { Lang } from '../i18n/ui';
+
+  function initLanguageSwitcher() {
+    const root = document.querySelector<HTMLElement>('[data-lang-switcher]');
+
+    if (!root || root.dataset.ready === 'true') {
+      return;
+    }
+
+    root.dataset.ready = 'true';
+
+    const toggle = root.querySelector<HTMLButtonElement>('[data-lang-toggle]');
+    const menu = root.querySelector<HTMLElement>('[data-lang-menu]');
+    const current = root.querySelector<HTMLElement>('[data-lang-current]');
+    const options = root.querySelectorAll<HTMLButtonElement>('[data-lang-option]');
+
+    if (!toggle || !menu || !current) {
+      return;
+    }
+
+    const updateLabel = (lang: Lang) => {
+      current.textContent = t(`switcher.current.${lang}`);
+      toggle.setAttribute('aria-label', t('switcher.menu'));
+    };
+
+    const closeMenu = () => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    const openMenu = () => {
+      menu.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+    };
+
+    updateLabel(getLang());
+
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+
+      if (menu.hidden) {
+        openMenu();
+      } else {
+        closeMenu();
+      }
+    });
+
+    options.forEach((option) => {
+      option.addEventListener('click', () => {
+        const nextLang = option.dataset.langOption as Lang;
+        setLang(nextLang);
+        updateLabel(nextLang);
+        closeMenu();
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!root.contains(event.target as Node)) {
+        closeMenu();
+      }
+    });
+
+    window.addEventListener('lang-change', ((event: Event) => {
+      const detail = (event as CustomEvent<{ lang: Lang }>).detail;
+      updateLabel(detail.lang);
+    }) as EventListener);
+  }
+
+  document.addEventListener('astro:page-load', initLanguageSwitcher);
+  document.addEventListener('astro:after-swap', initLanguageSwitcher);
+  initLanguageSwitcher();
+</script>
+
+<style>
+  .lang-switcher {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 30;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  .lang-trigger,
+  .lang-option {
+    border: 1px solid rgba(220, 160, 190, 0.18);
+    background: rgba(13, 8, 16, 0.78);
+    color: var(--sakura-100);
+    cursor: pointer;
+  }
+
+  .lang-trigger {
+    min-width: 3.4rem;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    backdrop-filter: blur(8px);
+    transition:
+      border-color 0.25s ease,
+      transform 0.25s ease,
+      background 0.25s ease;
+  }
+
+  .lang-trigger:hover {
+    transform: translateY(-1px);
+    border-color: rgba(245, 184, 204, 0.35);
+    background: rgba(18, 10, 16, 0.92);
+  }
+
+  .lang-menu {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.55rem;
+    padding: 0.45rem;
+    border: 1px solid rgba(220, 160, 190, 0.18);
+    background: rgba(13, 8, 16, 0.9);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+  }
+
+  .lang-option {
+    min-width: 7rem;
+    padding: 0.55rem 0.8rem;
+    text-align: left;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    transition:
+      color 0.25s ease,
+      border-color 0.25s ease,
+      background 0.25s ease;
+  }
+
+  .lang-option:hover {
+    color: var(--sakura-50);
+    border-color: rgba(245, 184, 204, 0.34);
+    background: rgba(160, 64, 96, 0.14);
+  }
+
+  @media (max-width: 767px) {
+    .lang-switcher {
+      top: 1rem;
+      right: 1rem;
+    }
+  }
+</style>

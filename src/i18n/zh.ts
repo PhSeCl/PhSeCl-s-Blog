@@ -1,4 +1,16 @@
 export const zh = {
-  name: '中文',
-};
-
+  'nav.blog': 'BLOG',
+  'nav.works': 'WORKS',
+  'nav.about': 'ABOUT',
+  'nav.friends': 'FRIENDS',
+  'hero.title': '花が散る、\n言葉が残る。',
+  'hero.subtitle': 'コードと日常の記録。\n技术博客 & Portfolio',
+  'hero.badge': '桜の庭 — SINCE 2025',
+  'blog.latest': '最新の記事',
+  'blog.readmore': '続きを読む',
+  'footer.powered': 'Powered by Astro',
+  'switcher.current.zh': '中',
+  'switcher.current.ja': '日',
+  'switcher.current.en': 'EN',
+  'switcher.menu': '语言切换',
+} as const;

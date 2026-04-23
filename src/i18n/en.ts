@@ -1,4 +1,16 @@
 export const en = {
-  name: 'English',
-};
-
+  'nav.blog': 'BLOG',
+  'nav.works': 'WORKS',
+  'nav.about': 'ABOUT',
+  'nav.friends': 'FRIENDS',
+  'hero.title': 'Petals fall,\nwords remain.',
+  'hero.subtitle': 'A record of code and life.\nTech Blog & Portfolio',
+  'hero.badge': 'Garden of Sakura — SINCE 2025',
+  'blog.latest': 'Latest Posts',
+  'blog.readmore': 'Read more',
+  'footer.powered': 'Powered by Astro',
+  'switcher.current.zh': '中',
+  'switcher.current.ja': '日',
+  'switcher.current.en': 'EN',
+  'switcher.menu': 'Language',
+} as const;
