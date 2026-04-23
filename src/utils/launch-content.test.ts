@@ -16,17 +16,31 @@ describe('launch content cleanup', () => {
   });
 
   it('keeps the works empty state messaging wired up', () => {
-    const worksPage = read('pages/works.astro');
+    const worksDirectory = read('components/WorksDirectory.astro');
 
-    expect(worksPage).toContain('data-i18n="works.empty"');
-    expect(worksPage).toContain('workItems.length > 0 ?');
+    expect(worksDirectory).toContain('data-i18n="works.empty"');
+    expect(worksDirectory).toContain('visibleWorks.length > 0 ?');
   });
 
   it('renders works covers from content data with a visual fallback', () => {
-    const worksPage = read('pages/works.astro');
+    const worksDirectory = read('components/WorksDirectory.astro');
 
-    expect(worksPage).toContain('style={work.cover ? `--work-cover-image: url(${JSON.stringify(work.cover)})` : undefined}');
-    expect(worksPage).toContain('var(--work-cover-image)');
+    expect(worksDirectory).toContain('style={work.cover ? `--work-cover-image: url(${JSON.stringify(work.cover)})` : undefined}');
+    expect(worksDirectory).toContain('var(--work-cover-image)');
+  });
+
+  it('keeps works cards resilient to long descriptions and includes pagination navigation', () => {
+    const worksDirectory = read('components/WorksDirectory.astro');
+    const worksPagedRoute = read('pages/works/page/[page].astro');
+
+    expect(worksDirectory).toContain('-webkit-line-clamp: 4;');
+    expect(worksDirectory).toContain('display: -webkit-box;');
+    expect(worksDirectory).toContain('margin-top: auto;');
+    expect(worksDirectory).toContain('class="pagination-nav"');
+    expect(worksDirectory).toContain("Pagination");
+    expect(worksDirectory).toContain('尾页');
+    expect(worksPagedRoute).toContain('getStaticPaths');
+    expect(worksPagedRoute).toContain('params: { page:');
   });
 
   it('renders friend avatars as standard images with an explicit fallback state', () => {

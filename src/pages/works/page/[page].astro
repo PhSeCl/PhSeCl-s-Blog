@@ -1,0 +1,38 @@
+---
+import WorksDirectory from '../../../components/WorksDirectory.astro';
+import works from '../../../data/works.json';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import { WORKS_PER_PAGE, buildWorksPagination, type WorkItem } from '../../../utils/works';
+
+const workItems = works as WorkItem[];
+
+export async function getStaticPaths() {
+  const allWorkItems = works as WorkItem[];
+  const totalPages = Math.max(1, Math.ceil(allWorkItems.length / WORKS_PER_PAGE));
+
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => {
+    const page = index + 2;
+
+    return {
+      params: { page: `${page}` },
+      props: { currentPage: page },
+    };
+  });
+}
+
+const { currentPage } = Astro.props;
+const pagination = buildWorksPagination(workItems.length, currentPage);
+---
+
+<PageLayout
+  title={`WORKS / ${pagination.currentPage}`}
+  description="展示基于 Astro、Canvas 与前端设计语言构建的作品与实验。"
+  titleKey="page.works"
+  titleFallback="WORKS"
+  seoTitleKey="seo.works.title"
+  seoDescriptionKey="seo.works.description"
+  seoTitleFallback="WORKS"
+  seoDescriptionFallback="展示基于 Astro、Canvas 与前端设计语言构建的作品与实验。"
+>
+  <WorksDirectory works={workItems} currentPage={pagination.currentPage} />
+</PageLayout>
