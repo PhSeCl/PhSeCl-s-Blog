@@ -19,23 +19,29 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   <section class="works-grid">
     {
-      works.map((work) => (
-        <article class="work-card">
-          <div class="work-cover" aria-hidden="true"></div>
-          <div class="work-body">
-            <h2>{work.title}</h2>
-            <p>{work.description}</p>
-            <div class="tag-list">
-              {work.tags.map((tag) => (
-                <span>{tag}</span>
-              ))}
+      works.length > 0 ? (
+        works.map((work) => (
+          <article class="work-card">
+            <div class="work-cover" aria-hidden="true"></div>
+            <div class="work-body">
+              <h2>{work.title}</h2>
+              <p>{work.description}</p>
+              <div class="tag-list">
+                {work.tags.map((tag) => (
+                  <span>{tag}</span>
+                ))}
+              </div>
+              <a href={work.url} target="_blank" rel="noreferrer">
+                Visit →
+              </a>
             </div>
-            <a href={work.url} target="_blank" rel="noreferrer">
-              Visit →
-            </a>
-          </div>
-        </article>
-      ))
+          </article>
+        ))
+      ) : (
+        <p class="empty-state" data-i18n="works.empty">
+          作品页正在整理中，新的页面很快会在这里出现。
+        </p>
+      )
     }
   </section>
 </PageLayout>
@@ -43,7 +49,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 <style>
   .page-intro {
     margin: 0 0 2rem;
-    color: rgba(224, 198, 210, 0.74);
+    color: var(--text-soft);
     line-height: 1.9;
   }
 
@@ -51,6 +57,13 @@ import PageLayout from '../layouts/PageLayout.astro';
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.6rem;
+  }
+
+  .empty-state {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.9;
+    letter-spacing: 0.08em;
   }
 
   .work-card {

@@ -19,6 +19,7 @@ export const en = {
   'about.skills': 'Skills / Interests',
   'about.timeline': 'Timeline',
   'works.intro': 'A small collection of finished work, ongoing experiments, and projects still taking shape.',
+  'works.empty': 'Works are being curated and will appear here soon.',
   'friends.intro': 'A few sites worth visiting often, with more to be added over time.',
   'friends.empty': 'Friend links are being curated and will appear here soon.',
   'notfound.message': 'Page not found — this petal drifted somewhere that does not exist',

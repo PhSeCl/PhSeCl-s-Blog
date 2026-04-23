@@ -16,7 +16,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     <div class="avatar-shell">
       <div class="avatar-fallback" aria-hidden="true"></div>
       <img
-        src="/media/people/avatar.webp"
+        src="/media/people/avatar.png"
         alt="PhSeCl avatar"
         class="avatar"
         onerror="this.classList.add('is-hidden')"
@@ -24,6 +24,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     </div>
 
     <div class="intro-copy">
+      <h2 class="about-name">PhSeCl</h2>
       <p data-i18n="about.intro">
         在这里，我想把技术、日常、审美和那些深夜里短暂却真实的想法，慢慢整理成可以回看的文字。
       </p>
@@ -45,21 +46,14 @@ import PageLayout from '../layouts/PageLayout.astro';
     <h2 data-i18n="about.timeline">歩いてきた道</h2>
     <div class="timeline">
       <article class="timeline-item">
-        <div class="year">2025</div>
+        <div class="year">Now</div>
         <div class="content">
-          <h3>PhSeCl Blog Rebuild</h3>
-          <p>用 Astro 重构个人站，整理写作、作品和长期维护的结构基础。</p>
+          <h3>PhSeCl</h3>
+          <p>以个人网站为起点，继续慢慢整理写作、作品与长期记录的结构。</p>
         </div>
       </article>
       <article class="timeline-item">
-        <div class="year">2024</div>
-        <div class="content">
-          <h3>Creative Frontend Experiments</h3>
-          <p>开始更系统地探索 Canvas、动效表达和偏氛围化的网页叙事。</p>
-        </div>
-      </article>
-      <article class="timeline-item">
-        <div class="year">Future</div>
+        <div class="year">Soon</div>
         <div class="content">
           <h3>More notes, more works</h3>
           <p><!-- 后续将在这里扩展更完整的时间线内容 --></p>
@@ -108,8 +102,17 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .intro-copy p {
     margin: 0;
-    color: rgba(224, 198, 210, 0.78);
+    color: var(--text-soft);
     line-height: 1.95;
+  }
+
+  .about-name {
+    margin: 0 0 0.65rem;
+    color: var(--text-heading);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+    font-weight: 400;
+    letter-spacing: 0.08em;
   }
 
   .about-section {

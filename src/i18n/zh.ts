@@ -19,6 +19,7 @@ export const zh = {
   'about.skills': '兴趣 / Skills',
   'about.timeline': '歩いてきた道',
   'works.intro': '一些已经完成、正在打磨，或者仍然在生长中的作品。',
+  'works.empty': '作品页正在整理中，新的页面很快会在这里出现。',
   'friends.intro': '一些值得常去坐坐的站点。未来这里会继续慢慢补全。',
   'friends.empty': '友链还在整理中，等风景慢慢聚齐。',
   'notfound.message': 'ページが見つかりません — 这片花瓣飘到了不存在的地方',
