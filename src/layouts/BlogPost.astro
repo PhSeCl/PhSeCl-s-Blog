@@ -12,7 +12,13 @@ interface Props {
 const { post, previous, next } = Astro.props;
 ---
 
-<BaseLayout title={`${post.data.title} — PhSeCl`} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  articlePublishedTime={post.data.date.toISOString()}
+  articleTags={post.data.tags}
+>
   <main class="blog-post-layout">
     <article class="post-shell">
       <header class="post-header">

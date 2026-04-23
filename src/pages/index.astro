@@ -10,7 +10,14 @@ const latestPosts = sortBlogPosts(
 ).slice(0, 6);
 ---
 
-<BaseLayout title="PhSeCl" description="PhSeCl.com personal website homepage">
+<BaseLayout
+  title="PhSeCl"
+  description="樱花夜色中的个人博客与作品主页，记录代码、生活与创作。"
+  seoTitleKey="seo.home.title"
+  seoDescriptionKey="seo.home.description"
+  seoTitleFallback="PhSeCl"
+  seoDescriptionFallback="樱花夜色中的个人博客与作品主页，记录代码、生活与创作。"
+>
   <main>
     <VideoHero />
 

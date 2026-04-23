@@ -6,6 +6,10 @@ interface Props {
   description?: string;
   titleKey: string;
   titleFallback: string;
+  seoTitleKey?: string;
+  seoDescriptionKey?: string;
+  seoTitleFallback?: string;
+  seoDescriptionFallback?: string;
 }
 
 const {
@@ -13,10 +17,21 @@ const {
   description = 'Page layout',
   titleKey,
   titleFallback,
+  seoTitleKey,
+  seoDescriptionKey,
+  seoTitleFallback,
+  seoDescriptionFallback,
 } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  seoTitleKey={seoTitleKey}
+  seoDescriptionKey={seoDescriptionKey}
+  seoTitleFallback={seoTitleFallback}
+  seoDescriptionFallback={seoDescriptionFallback}
+>
   <main class="page-layout">
     <section class="page-shell">
       <header class="page-header">

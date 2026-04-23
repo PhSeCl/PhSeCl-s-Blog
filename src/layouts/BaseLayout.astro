@@ -8,15 +8,31 @@ interface Props {
   title?: string;
   description?: string;
   lang?: string;
+  seoTitleKey?: string;
+  seoDescriptionKey?: string;
+  seoTitleFallback?: string;
+  seoDescriptionFallback?: string;
+  ogType?: 'website' | 'article';
+  articlePublishedTime?: string;
+  articleTags?: string[];
 }
 
 const {
   title = 'PhSeCl',
   description = 'PhSeCl.com personal website',
   lang = 'zh',
+  seoTitleKey,
+  seoDescriptionKey,
+  seoTitleFallback,
+  seoDescriptionFallback,
+  ogType = 'website',
+  articlePublishedTime,
+  articleTags = [],
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://phsecl.com');
+const ogImageUrl = new URL('/images/og-image.png', Astro.site ?? 'https://phsecl.com');
+const finalTitle = title === 'PhSeCl' ? title : `${title} \u2014 PhSeCl`;
 ---
 
 <!doctype html>
@@ -25,13 +41,35 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://phsecl.c
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ViewTransitions />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content="/images/og-image.png" />
+    <title
+      data-seo-title-key={seoTitleKey}
+      data-seo-title-fallback={seoTitleFallback ?? title}
+    >
+      {finalTitle}
+    </title>
+    <meta
+      name="description"
+      content={description}
+      data-seo-description-key={seoDescriptionKey}
+      data-seo-description-fallback={seoDescriptionFallback ?? description}
+    />
+    <meta
+      property="og:title"
+      content={finalTitle}
+      data-seo-title-key={seoTitleKey}
+      data-seo-title-fallback={seoTitleFallback ?? title}
+    />
+    <meta
+      property="og:description"
+      content={description}
+      data-seo-description-key={seoDescriptionKey}
+      data-seo-description-fallback={seoDescriptionFallback ?? description}
+    />
+    <meta property="og:image" content={ogImageUrl.toString()} />
     <meta property="og:url" content={canonicalUrl.toString()} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {articlePublishedTime && <meta property="article:published_time" content={articlePublishedTime} />}
+    {articleTags.map((tag) => <meta property="article:tag" content={tag} />)}
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href={canonicalUrl.toString()} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -41,6 +79,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://phsecl.c
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;600&family=Zen+Old+Mincho:wght@400;700&display=swap"
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <slot name="head" />
   </head>
   <body>
     <SakuraCanvas />
@@ -51,14 +90,61 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://phsecl.c
 </html>
 
 <script>
-  import { initI18n } from '../utils/i18n';
+  import { initI18n, getLang } from '../utils/i18n';
+  import { ui, type Lang } from '../i18n/ui';
+
+  function withSuffix(title: string): string {
+    return title === 'PhSeCl' ? title : `${title} \u2014 PhSeCl`;
+  }
+
+  function applySeoTranslations(lang: Lang): void {
+    const titleNode = document.querySelector('title[data-seo-title-key]');
+    const descriptionMeta = document.querySelector(
+      'meta[name="description"][data-seo-description-key]',
+    );
+    const ogTitleMeta = document.querySelector(
+      'meta[property="og:title"][data-seo-title-key]',
+    );
+    const ogDescriptionMeta = document.querySelector(
+      'meta[property="og:description"][data-seo-description-key]',
+    );
+
+    if (titleNode instanceof HTMLTitleElement) {
+      const key = titleNode.dataset.seoTitleKey;
+      const fallback = titleNode.dataset.seoTitleFallback ?? 'PhSeCl';
+      const translated = key ? ui[lang][key] ?? fallback : fallback;
+      const resolvedTitle = withSuffix(translated);
+      titleNode.textContent = resolvedTitle;
+
+      if (ogTitleMeta instanceof HTMLMetaElement) {
+        ogTitleMeta.content = resolvedTitle;
+      }
+    }
+
+    if (descriptionMeta instanceof HTMLMetaElement) {
+      const key = descriptionMeta.dataset.seoDescriptionKey;
+      const fallback = descriptionMeta.dataset.seoDescriptionFallback ?? '';
+      descriptionMeta.content = key ? ui[lang][key] ?? fallback : fallback;
+    }
+
+    if (ogDescriptionMeta instanceof HTMLMetaElement) {
+      const key = ogDescriptionMeta.dataset.seoDescriptionKey;
+      const fallback = ogDescriptionMeta.dataset.seoDescriptionFallback ?? '';
+      ogDescriptionMeta.content = key ? ui[lang][key] ?? fallback : fallback;
+    }
+  }
 
   function initTranslations() {
     initI18n();
+    applySeoTranslations(getLang());
   }
 
   document.addEventListener('astro:page-load', initTranslations);
   document.addEventListener('astro:after-swap', initTranslations);
+  window.addEventListener('lang-change', (event: Event) => {
+    const detail = (event as CustomEvent<{ lang?: Lang }>).detail;
+    applySeoTranslations(detail?.lang ?? getLang());
+  });
   initTranslations();
 </script>
 

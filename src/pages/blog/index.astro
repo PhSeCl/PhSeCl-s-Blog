@@ -9,7 +9,14 @@ const posts = sortBlogPosts(
 );
 ---
 
-<BaseLayout title="Blog — PhSeCl" description="Thoughts, notes, and technical writing from PhSeCl">
+<BaseLayout
+  title="BLOG"
+  description="按时间整理的博客文章列表，收录技术记录、建站笔记与日常随想。"
+  seoTitleKey="seo.blog.title"
+  seoDescriptionKey="seo.blog.description"
+  seoTitleFallback="BLOG"
+  seoDescriptionFallback="按时间整理的博客文章列表，收录技术记录、建站笔记与日常随想。"
+>
   <main class="blog-index">
     <section class="blog-section">
       <div class="section-header">

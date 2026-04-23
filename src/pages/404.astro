@@ -2,7 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="404 — PhSeCl" description="Page not found">
+<BaseLayout
+  title="404"
+  description="页面不存在，这片花瓣飘到了未被命名的地方。"
+  seoTitleKey="seo.notfound.title"
+  seoDescriptionKey="seo.notfound.description"
+  seoTitleFallback="404"
+  seoDescriptionFallback="页面不存在，这片花瓣飘到了未被命名的地方。"
+>
   <main class="notfound-layout">
     <section class="notfound-shell">
       <p class="notfound-code" data-i18n="page.notfound">404</p>
