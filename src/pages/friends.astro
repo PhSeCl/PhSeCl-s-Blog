@@ -1,6 +1,15 @@
 ---
 import friends from '../data/friends.json';
 import PageLayout from '../layouts/PageLayout.astro';
+
+interface FriendItem {
+  name: string;
+  description: string;
+  url: string;
+  avatar: string;
+}
+
+const friendItems = friends as FriendItem[];
 ---
 
 <PageLayout
@@ -19,8 +28,8 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   <section class="friends-grid">
     {
-      friends.length > 0 ? (
-        friends.map((friend) => (
+      friendItems.length > 0 ? (
+        friendItems.map((friend) => (
           <article class="friend-card">
             <div class="friend-avatar">
               <div class="friend-avatar-fallback" aria-hidden="true"></div>

@@ -1,6 +1,16 @@
 ---
 import works from '../data/works.json';
 import PageLayout from '../layouts/PageLayout.astro';
+
+interface WorkItem {
+  title: string;
+  description: string;
+  tags: string[];
+  url: string;
+  cover: string;
+}
+
+const workItems = works as WorkItem[];
 ---
 
 <PageLayout
@@ -19,8 +29,8 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   <section class="works-grid">
     {
-      works.length > 0 ? (
-        works.map((work) => (
+      workItems.length > 0 ? (
+        workItems.map((work) => (
           <article class="work-card">
             <div class="work-cover" aria-hidden="true"></div>
             <div class="work-body">
