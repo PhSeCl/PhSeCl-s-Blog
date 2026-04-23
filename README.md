@@ -64,3 +64,68 @@ npm run build
 - `public/media/site/hero/cover-light.avif`
 - `public/media/site/branding/og-image.png`
 - `public/media/people/avatar.webp`
+
+## 友链投稿
+
+欢迎通过提交 PR 的方式申请加入友链页。站点会从 `src/data/friends.json` 读取友链数据，并在 `/friends` 页面展示。
+
+### 提交流程
+
+1. Fork 本仓库并创建分支。
+2. 将你的头像文件放到 `public/media/friends/` 目录下。
+3. 在 `src/data/friends.json` 里追加一条对象。
+4. 提交 PR，标题可写为 `Add friend link: 你的站点名`。
+
+### 数据格式
+
+`src/data/friends.json` 使用 JSON 数组，单条友链格式如下：
+
+```json
+{
+  "name": "你的站点名",
+  "description": "一句简短介绍，建议 20-60 字",
+  "url": "https://your-site.example",
+  "avatar": "/media/friends/your-avatar.png"
+}
+```
+
+如果文件当前还是空数组 `[]`，可以直接改成：
+
+```json
+[
+  {
+    "name": "你的站点名",
+    "description": "一句简短介绍，建议 20-60 字",
+    "url": "https://your-site.example",
+    "avatar": "/media/friends/your-avatar.png"
+  }
+]
+```
+
+如果已经有其他友链，请按下面的方式继续追加，注意逗号位置：
+
+```json
+[
+  {
+    "name": "已有站点",
+    "description": "已有简介",
+    "url": "https://example.com",
+    "avatar": "/media/friends/existing-avatar.png"
+  },
+  {
+    "name": "你的站点名",
+    "description": "一句简短介绍，建议 20-60 字",
+    "url": "https://your-site.example",
+    "avatar": "/media/friends/your-avatar.png"
+  }
+]
+```
+
+### 投稿约定
+
+- `name`：展示在卡片标题中的站点名或昵称
+- `description`：展示在卡片正文中的一句介绍
+- `url`：你的主页链接，需带 `https://`
+- `avatar`：仓库内头像资源路径，建议使用方形图片
+- 头像文件名尽量使用英文、数字和短横线，便于维护
+- 请确保站点可以正常访问，且内容适合公开展示

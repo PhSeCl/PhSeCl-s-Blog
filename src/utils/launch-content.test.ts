@@ -15,10 +15,11 @@ describe('launch content cleanup', () => {
     expect(hero).toContain('https://space.bilibili.com/384628212');
   });
 
-  it('keeps works data empty for launch', () => {
-    const works = read('data/works.json').trim();
+  it('keeps the works empty state messaging wired up', () => {
+    const worksPage = read('pages/works.astro');
 
-    expect(works).toBe('[]');
+    expect(worksPage).toContain('data-i18n="works.empty"');
+    expect(worksPage).toContain('workItems.length > 0 ?');
   });
 
   it('shows the site owner name and the final avatar asset on the about page', () => {
