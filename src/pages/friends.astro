@@ -33,7 +33,7 @@ const friendItems = friends as FriendItem[];
           <article class="friend-card">
             <div class="friend-avatar">
               <div class="friend-avatar-fallback" aria-hidden="true"></div>
-              <img src={friend.avatar} alt="" onerror="this.classList.add('is-hidden')" />
+              <img src={friend.avatar} alt="" onerror="this.dataset.error = 'true'" />
             </div>
             <div class="friend-body">
               <h2>{friend.name}</h2>
@@ -124,7 +124,7 @@ const friendItems = friends as FriendItem[];
     object-fit: cover;
   }
 
-  .friend-avatar img.is-hidden {
+  .friend-avatar[data-error='true'] img {
     opacity: 0;
   }
 

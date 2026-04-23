@@ -32,7 +32,11 @@ const workItems = works as WorkItem[];
       workItems.length > 0 ? (
         workItems.map((work) => (
           <article class="work-card">
-            <div class="work-cover" aria-hidden="true"></div>
+            <div
+              class="work-cover"
+              aria-hidden="true"
+              style={work.cover ? `--work-cover-image: url(${JSON.stringify(work.cover)})` : undefined}
+            ></div>
             <div class="work-body">
               <h2>{work.title}</h2>
               <p>{work.description}</p>
@@ -95,8 +99,11 @@ const workItems = works as WorkItem[];
   .work-cover {
     aspect-ratio: 16 / 9;
     background:
+      var(--work-cover-image),
       linear-gradient(135deg, rgba(212, 120, 154, 0.12), transparent),
       rgba(255, 255, 255, 0.04);
+    background-position: center;
+    background-size: cover;
   }
 
   .work-body {
