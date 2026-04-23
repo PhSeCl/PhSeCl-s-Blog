@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "title": "Bilibili-Comment-and-Danmaku-Analysis",
+        "description": "该项目是对 B 站（Bilibili）的视频评论和弹幕数据进行情感分析，并通过多维度的可视化手段展示分析结果。",
+        "tags": ["Python", "数据分析", "情感分析", "可视化"],
+        "url": "https://github.com/PhSeCl/Bilibili-Comment-and-Danmaku-Analysis",
+        "cover": "/media/works/lun04b.png"
+    }
+]
