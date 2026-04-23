@@ -21,6 +21,8 @@ export const zh = {
   'friends.intro': '一些值得常去坐坐的站点。未来这里会继续慢慢补全。',
   'notfound.message': 'ページが見つかりません — 这片花瓣飘到了不存在的地方',
   'notfound.back': '返回首页',
+  'action.back': '返回上一级',
+  'action.home': '返回首页',
   'switcher.current.zh': '中',
   'switcher.current.ja': '日',
   'switcher.current.en': 'EN',

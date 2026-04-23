@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BlogCard from '../../components/BlogCard.astro';
+import SubpageActions from '../../components/SubpageActions.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sortBlogPosts } from '../../utils/blog';
 
@@ -19,23 +20,27 @@ const posts = sortBlogPosts(
 >
   <main class="blog-index">
     <section class="blog-section">
-      <div class="section-header">
-        <h1 data-i18n="blog.latest">最新の記事</h1>
-        <div class="line"></div>
-      </div>
+      <div class="blog-shell">
+        <SubpageActions backFallback="/" />
 
-      <div class="blog-grid">
-        {
-          posts.map((post) => (
-            <BlogCard
-              title={post.data.title}
-              description={post.data.description}
-              date={post.data.date}
-              tags={post.data.tags}
-              slug={post.id}
-            />
-          ))
-        }
+        <div class="section-header">
+          <h1 data-i18n="blog.latest">最新の記事</h1>
+          <div class="line"></div>
+        </div>
+
+        <div class="blog-grid">
+          {
+            posts.map((post) => (
+              <BlogCard
+                title={post.data.title}
+                description={post.data.description}
+                date={post.data.date}
+                tags={post.data.tags}
+                slug={post.id}
+              />
+            ))
+          }
+        </div>
       </div>
     </section>
   </main>
@@ -50,8 +55,13 @@ const posts = sortBlogPosts(
     position: relative;
     z-index: 2;
     min-height: 100vh;
-    padding: 6rem 8%;
+    padding: 6rem 1.5rem 4rem;
     background: linear-gradient(to bottom, var(--bg-deep) 0%, #0d0810 100%);
+  }
+
+  .blog-shell {
+    width: min(100%, 72rem);
+    margin: 0 auto;
   }
 
   .section-header {
@@ -84,7 +94,7 @@ const posts = sortBlogPosts(
 
   @media (max-width: 767px) {
     .blog-section {
-      padding: 5rem 1.5rem 4rem;
+      padding-top: 5rem;
     }
   }
 </style>

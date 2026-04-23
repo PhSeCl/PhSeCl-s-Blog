@@ -1,4 +1,5 @@
 ---
+import SubpageActions from '../components/SubpageActions.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -12,6 +13,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 >
   <main class="notfound-layout">
     <section class="notfound-shell">
+      <SubpageActions backFallback="/" />
       <p class="notfound-code" data-i18n="page.notfound">404</p>
       <p class="notfound-copy" data-i18n="notfound.message">
         ページが見つかりません — 这片花瓣飘到了不存在的地方
@@ -31,7 +33,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .notfound-shell {
+    width: min(100%, 42rem);
     text-align: center;
+  }
+
+  .notfound-shell :global(.subpage-actions) {
+    justify-content: center;
   }
 
   .notfound-code {

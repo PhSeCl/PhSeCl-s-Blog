@@ -21,6 +21,8 @@ export const en = {
   'friends.intro': 'A few sites worth visiting often, with more to be added over time.',
   'notfound.message': 'Page not found — this petal drifted somewhere that does not exist',
   'notfound.back': 'Back to Home',
+  'action.back': 'Back',
+  'action.home': 'Home',
   'switcher.current.zh': '中',
   'switcher.current.ja': '日',
   'switcher.current.en': 'EN',

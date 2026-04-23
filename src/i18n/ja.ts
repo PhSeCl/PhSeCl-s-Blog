@@ -21,6 +21,8 @@ export const ja = {
   'friends.intro': '折に触れて訪れたくなる、素敵なサイトたちです。',
   'notfound.message': 'ページが見つかりません — 花びらが見知らぬ場所まで流れてしまいました',
   'notfound.back': 'ホームへ戻る',
+  'action.back': '前のページへ',
+  'action.home': 'ホームへ',
   'switcher.current.zh': '中',
   'switcher.current.ja': '日',
   'switcher.current.en': 'EN',

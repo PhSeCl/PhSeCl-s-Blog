@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Giscus from '../components/Giscus.astro';
+import SubpageActions from '../components/SubpageActions.astro';
 import { formatBlogDate, type BlogEntry } from '../utils/blog';
 
 interface Props {
@@ -21,6 +22,8 @@ const { post, previous, next } = Astro.props;
 >
   <main class="blog-post-layout">
     <article class="post-shell">
+      <SubpageActions backFallback="/blog" />
+
       <header class="post-header">
         <p class="post-date">{formatBlogDate(post.data.date)}</p>
         <h1>{post.data.title}</h1>
