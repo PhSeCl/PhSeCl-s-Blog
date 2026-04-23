@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
   DEFAULT_PETAL_COLORS,
+  getCanvasDpr,
   createSakuraConfig,
   getResponsivePetalCount,
   mergeSakuraConfig,
@@ -11,11 +12,11 @@ describe('sakura configuration', () => {
     const config = createSakuraConfig({ viewportWidth: 1440 });
 
     expect(config.isMobile).toBe(false);
-    expect(config.countRange).toEqual([150, 200]);
+    expect(config.countRange).toEqual([100, 100]);
     expect(config.sizeRange).toEqual([6, 18]);
     expect(config.speedRange).toEqual([0.3, 1]);
-    expect(config.blurEnabled).toBe(true);
     expect(config.enableMouseInteraction).toBe(true);
+    expect(config.petalShapeChance).toBe(0.15);
     expect(config.colors).toEqual(DEFAULT_PETAL_COLORS);
   });
 
@@ -23,10 +24,9 @@ describe('sakura configuration', () => {
     const config = createSakuraConfig({ viewportWidth: 390 });
 
     expect(config.isMobile).toBe(true);
-    expect(config.countRange).toEqual([50, 80]);
+    expect(config.countRange).toEqual([40, 40]);
     expect(config.sizeRange).toEqual([5, 12]);
     expect(config.speedRange).toEqual([0.3, 0.8]);
-    expect(config.blurEnabled).toBe(false);
     expect(config.enableMouseInteraction).toBe(false);
   });
 
@@ -41,12 +41,18 @@ describe('sakura configuration', () => {
 
     expect(merged.colors).toEqual(['rgba(255,255,255,0.5)']);
     expect(merged.interactionRadius).toBe(180);
-    expect(merged.countRange).toEqual([150, 200]);
+    expect(merged.countRange).toEqual([100, 100]);
   });
 
   test('resolves petal counts within the configured range', () => {
-    expect(getResponsivePetalCount([150, 200], 0)).toBe(150);
-    expect(getResponsivePetalCount([150, 200], 0.5)).toBe(175);
-    expect(getResponsivePetalCount([150, 200], 1)).toBe(200);
+    expect(getResponsivePetalCount([100, 100], 0)).toBe(100);
+    expect(getResponsivePetalCount([100, 100], 0.5)).toBe(100);
+    expect(getResponsivePetalCount([100, 100], 1)).toBe(100);
+  });
+
+  test('caps canvas dpr more aggressively on mobile high-density screens', () => {
+    expect(getCanvasDpr(3, false)).toBe(2);
+    expect(getCanvasDpr(3, true)).toBe(1.5);
+    expect(getCanvasDpr(1.25, true)).toBe(1.25);
   });
 });

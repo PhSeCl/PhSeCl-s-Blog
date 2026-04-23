@@ -22,11 +22,11 @@ export interface SakuraConfig {
   interactionStrength: number;
   mouseVelocityInfluence: number;
   colors: string[];
-  blurEnabled: boolean;
   enableMouseInteraction: boolean;
   dprCap: number;
   mobileBreakpoint: number;
   petalShapeChance: number;
+  resizeDebounceMs: number;
 }
 
 export type SakuraConfigOverrides = Partial<SakuraConfig> & {
@@ -58,7 +58,6 @@ interface Petal {
   depth: number;
   opacity: number;
   shape: PetalShape;
-  blur: number;
 }
 
 const TAU = Math.PI * 2;
@@ -77,6 +76,10 @@ export function getResponsivePetalCount(range: Range, ratio = Math.random()): nu
   return Math.round(min + (max - min) * normalizedRatio);
 }
 
+export function getCanvasDpr(devicePixelRatio: number, isMobile: boolean): number {
+  return Math.min(devicePixelRatio || 1, isMobile ? 1.5 : 2);
+}
+
 export function createSakuraConfig(overrides: SakuraConfigOverrides = {}): SakuraConfig {
   const viewportWidth =
     overrides.viewportWidth ??
@@ -87,7 +90,7 @@ export function createSakuraConfig(overrides: SakuraConfigOverrides = {}): Sakur
   const base: SakuraConfig = {
     viewportWidth,
     isMobile,
-    countRange: isMobile ? [50, 80] : [150, 200],
+    countRange: isMobile ? [40, 40] : [100, 100],
     sizeRange: isMobile ? [5, 12] : [6, 18],
     speedRange: isMobile ? [0.3, 0.8] : [0.3, 1.0],
     wobbleRange: [0.5, 1.5],
@@ -97,11 +100,11 @@ export function createSakuraConfig(overrides: SakuraConfigOverrides = {}): Sakur
     interactionStrength: 0.55,
     mouseVelocityInfluence: 0.08,
     colors: [...DEFAULT_PETAL_COLORS],
-    blurEnabled: !isMobile,
     enableMouseInteraction: !isMobile,
     dprCap: 2,
     mobileBreakpoint,
-    petalShapeChance: 0.3,
+    petalShapeChance: 0.15,
+    resizeDebounceMs: 120,
   };
 
   return {
@@ -132,7 +135,6 @@ export function mergeSakuraConfig(
     countRange: overrides.countRange ?? (responsiveShift ? responsiveBase.countRange : base.countRange),
     sizeRange: overrides.sizeRange ?? (responsiveShift ? responsiveBase.sizeRange : base.sizeRange),
     speedRange: overrides.speedRange ?? (responsiveShift ? responsiveBase.speedRange : base.speedRange),
-    blurEnabled: overrides.blurEnabled ?? (responsiveShift ? responsiveBase.blurEnabled : base.blurEnabled),
     enableMouseInteraction:
       overrides.enableMouseInteraction ??
       (responsiveShift ? responsiveBase.enableMouseInteraction : base.enableMouseInteraction),
@@ -151,6 +153,7 @@ export class SakuraController {
   private dpr = 1;
   private running = false;
   private pausedByVisibility = false;
+  private resizeTimeout = 0;
   private pointer: PointerState = { x: -9999, y: -9999, vx: 0, vy: 0, active: false };
 
   constructor(canvas: HTMLCanvasElement, config: SakuraConfigOverrides = {}) {
@@ -158,6 +161,7 @@ export class SakuraController {
     this.context = canvas.getContext('2d');
     this.config = createSakuraConfig(config);
     this.handleResize = this.handleResize.bind(this);
+    this.handleResizeDebounced = this.handleResizeDebounced.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
     this.handlePointerMove = this.handlePointerMove.bind(this);
     this.handlePointerLeave = this.handlePointerLeave.bind(this);
@@ -190,6 +194,7 @@ export class SakuraController {
   stop(): void {
     this.running = false;
     window.cancelAnimationFrame(this.animationFrame);
+    window.clearTimeout(this.resizeTimeout);
     this.detachEvents();
   }
 
@@ -200,8 +205,15 @@ export class SakuraController {
   }
 
   private attachEvents(): void {
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.handleResizeDebounced);
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    this.syncPointerEvents();
+  }
+
+  private syncPointerEvents(): void {
+    window.removeEventListener('pointermove', this.handlePointerMove);
+    window.removeEventListener('pointerleave', this.handlePointerLeave);
+    window.removeEventListener('pointercancel', this.handlePointerLeave);
 
     if (this.config.enableMouseInteraction) {
       window.addEventListener('pointermove', this.handlePointerMove);
@@ -211,11 +223,19 @@ export class SakuraController {
   }
 
   private detachEvents(): void {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this.handleResizeDebounced);
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     window.removeEventListener('pointermove', this.handlePointerMove);
     window.removeEventListener('pointerleave', this.handlePointerLeave);
     window.removeEventListener('pointercancel', this.handlePointerLeave);
+  }
+
+  private handleResizeDebounced(): void {
+    window.clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = window.setTimeout(
+      this.handleResize,
+      this.config.resizeDebounceMs,
+    );
   }
 
   private handleResize(): void {
@@ -227,7 +247,11 @@ export class SakuraController {
       viewportWidth: window.innerWidth,
     });
 
-    this.dpr = Math.min(window.devicePixelRatio || 1, this.config.dprCap);
+    this.dpr = Math.min(
+      getCanvasDpr(window.devicePixelRatio || 1, this.config.isMobile),
+      this.config.dprCap,
+    );
+    this.syncPointerEvents();
     this.width = window.innerWidth;
     this.height = window.innerHeight;
 
@@ -303,10 +327,6 @@ export class SakuraController {
       depth,
       opacity: clamp(0.35 + Math.random() * 0.4, 0.2, 0.9) * depth,
       shape: Math.random() < this.config.petalShapeChance ? 'petal' : 'ellipse',
-      blur:
-        this.config.blurEnabled
-          ? clamp((1 - depth) * 1.4, 0, 1.25)
-          : 0,
     };
   }
 
@@ -379,11 +399,6 @@ export class SakuraController {
     this.context.translate(petal.x, petal.y);
     this.context.rotate(petal.rotation);
     this.context.scale(scaleX, 1);
-
-    if (this.config.blurEnabled && petal.blur > 0) {
-      this.context.filter = `blur(${petal.blur}px)`;
-    }
-
     this.context.fillStyle = petal.color;
     this.context.beginPath();
 
@@ -398,7 +413,6 @@ export class SakuraController {
     }
 
     this.context.fill();
-    this.context.filter = 'none';
     this.context.restore();
   }
 }
