@@ -6,17 +6,12 @@
     aria-checked="false"
     data-theme-toggle
   >
+    <span class="sr-only" data-theme-announcer>Theme</span>
     <span class="theme-track" aria-hidden="true">
-      <span class="theme-side theme-side-dark">
-        <span class="theme-icon">☾</span>
-        <span data-theme-label-dark>夜</span>
-      </span>
-      <span class="theme-side theme-side-light">
-        <span data-theme-label-light>昼</span>
-        <span class="theme-icon">☼</span>
-      </span>
+      <span class="theme-track-glow"></span>
+      <span class="theme-icon theme-icon-dark">☾</span>
+      <span class="theme-icon theme-icon-light">☼</span>
       <span class="theme-thumb">
-        <span class="theme-thumb-glow"></span>
         <span class="theme-thumb-core"></span>
       </span>
     </span>
@@ -38,10 +33,9 @@
     root.dataset.ready = 'true';
 
     const toggle = root.querySelector<HTMLButtonElement>('[data-theme-toggle]');
-    const darkLabel = root.querySelector<HTMLElement>('[data-theme-label-dark]');
-    const lightLabel = root.querySelector<HTMLElement>('[data-theme-label-light]');
+    const announcer = root.querySelector<HTMLElement>('[data-theme-announcer]');
 
-    if (!toggle || !darkLabel || !lightLabel) {
+    if (!toggle || !announcer) {
       return;
     }
 
@@ -50,8 +44,7 @@
       root.dataset.themeState = theme;
       toggle.setAttribute('aria-checked', String(isLight));
       toggle.setAttribute('aria-label', `${t('theme.menu')}: ${t(`theme.option.${theme}`)}`);
-      darkLabel.textContent = t('theme.current.dark');
-      lightLabel.textContent = t('theme.current.light');
+      announcer.textContent = `${t('theme.menu')}: ${t(`theme.option.${theme}`)}`;
     };
 
     updateToggle(getTheme());
@@ -79,10 +72,8 @@
 
 <style>
   .theme-switcher {
-    position: fixed;
-    top: 1.5rem;
-    right: 6.2rem;
-    z-index: 30;
+    position: relative;
+    z-index: 1;
     font-family: 'Noto Sans JP', sans-serif;
   }
 
@@ -96,13 +87,9 @@
 
   .theme-track {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.7rem;
-    width: 6.75rem;
-    height: 3rem;
-    padding: 0.5rem 0.9rem;
+    display: block;
+    width: 2.9rem;
+    height: 1.65rem;
     border: 1px solid var(--panel-border);
     border-radius: 999px;
     background:
@@ -110,7 +97,7 @@
       var(--panel-bg-strong);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 14px 32px var(--panel-shadow);
+      0 8px 22px var(--panel-shadow);
     backdrop-filter: blur(14px);
     transition:
       border-color 0.28s ease,
@@ -121,12 +108,9 @@
 
   .theme-toggle:hover .theme-track {
     border-color: var(--panel-border-strong);
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06)),
-      var(--panel-bg-strong);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.16),
-      0 18px 38px var(--panel-shadow);
+      0 10px 26px var(--panel-shadow);
     transform: translateY(-1px);
   }
 
@@ -140,114 +124,115 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.16),
       0 0 0 4px rgba(212, 120, 154, 0.14),
-      0 18px 38px var(--panel-shadow);
+      0 10px 26px var(--panel-shadow);
   }
 
-  .theme-side {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.28rem;
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    transition:
-      color 0.28s ease,
-      opacity 0.28s ease;
-  }
-
-  .theme-side-dark {
-    color: var(--sakura-100);
-    opacity: 0.95;
-  }
-
-  .theme-side-light {
-    color: var(--text-muted);
-    opacity: 0.72;
-  }
-
-  .theme-switcher[data-theme-state='light'] .theme-side-dark {
-    color: var(--text-muted);
-    opacity: 0.72;
-  }
-
-  .theme-switcher[data-theme-state='light'] .theme-side-light {
-    color: var(--sakura-100);
-    opacity: 0.95;
+  .theme-track-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 28% 50%, rgba(212, 120, 154, 0.14), transparent 38%),
+      radial-gradient(circle at 72% 50%, rgba(255, 226, 145, 0.08), transparent 34%);
+    transition: opacity 0.28s ease, background 0.28s ease;
   }
 
   .theme-icon {
-    font-size: 0.75rem;
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    font-size: 0.58rem;
     line-height: 1;
+    transform: translateY(-50%);
+    transition: color 0.28s ease, opacity 0.28s ease;
+  }
+
+  .theme-icon-dark {
+    left: 0.42rem;
+    color: var(--text-heading);
+    opacity: 0.85;
+  }
+
+  .theme-icon-light {
+    right: 0.42rem;
+    color: var(--text-muted);
+    opacity: 0.44;
   }
 
   .theme-thumb {
     position: absolute;
-    top: 0.28rem;
-    left: 0.28rem;
-    width: 2.35rem;
-    height: 2.35rem;
+    top: 0.12rem;
+    left: 0.12rem;
+    width: 1.35rem;
+    height: 1.35rem;
     border-radius: 999px;
-    transition:
-      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-      background 0.28s ease,
-      box-shadow 0.28s ease;
+    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .theme-switcher[data-theme-state='light'] .theme-thumb {
-    transform: translateX(3.84rem);
-  }
-
-  .theme-thumb-glow,
   .theme-thumb-core {
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-  }
-
-  .theme-thumb-glow {
-    inset: -0.08rem;
-    background: radial-gradient(circle, rgba(245, 184, 204, 0.26), transparent 72%);
-    opacity: 0.95;
-  }
-
-  .theme-thumb-core {
     border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: inherit;
     background:
-      linear-gradient(180deg, rgba(255, 248, 251, 0.92), rgba(236, 210, 222, 0.82));
+      linear-gradient(180deg, rgba(255, 248, 251, 0.96), rgba(236, 210, 222, 0.84));
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      0 10px 18px rgba(0, 0, 0, 0.18);
+      0 6px 12px rgba(0, 0, 0, 0.16);
+    transition: background 0.28s ease, box-shadow 0.28s ease;
+  }
+
+  .theme-switcher[data-theme-state='light'] .theme-track-glow {
+    background:
+      radial-gradient(circle at 28% 50%, rgba(212, 120, 154, 0.08), transparent 34%),
+      radial-gradient(circle at 72% 50%, rgba(255, 226, 145, 0.16), transparent 36%);
+  }
+
+  .theme-switcher[data-theme-state='light'] .theme-icon-dark {
+    color: var(--text-muted);
+    opacity: 0.42;
+  }
+
+  .theme-switcher[data-theme-state='light'] .theme-icon-light {
+    color: #ffd98f;
+    opacity: 0.96;
+  }
+
+  .theme-switcher[data-theme-state='light'] .theme-thumb {
+    transform: translateX(1.3rem);
   }
 
   .theme-switcher[data-theme-state='light'] .theme-thumb-core {
     background:
-      linear-gradient(180deg, rgba(255, 252, 245, 0.96), rgba(255, 226, 175, 0.82));
+      linear-gradient(180deg, rgba(255, 252, 245, 0.98), rgba(255, 226, 175, 0.88));
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.56),
-      0 10px 18px rgba(160, 84, 112, 0.16);
+      0 6px 12px rgba(160, 84, 112, 0.12);
   }
 
   @media (max-width: 767px) {
-    .theme-switcher {
-      top: 1rem;
-      right: 5.35rem;
+    .theme-track {
+      width: 2.7rem;
+      height: 1.55rem;
     }
 
-    .theme-track {
-      width: 6.2rem;
-      height: 2.8rem;
-      padding: 0.45rem 0.75rem;
+    .theme-icon-dark {
+      left: 0.38rem;
+    }
+
+    .theme-icon-light {
+      right: 0.38rem;
     }
 
     .theme-thumb {
-      width: 2.15rem;
-      height: 2.15rem;
+      top: 0.11rem;
+      left: 0.11rem;
+      width: 1.28rem;
+      height: 1.28rem;
     }
 
     .theme-switcher[data-theme-state='light'] .theme-thumb {
-      transform: translateX(3.24rem);
+      transform: translateX(1.18rem);
     }
   }
 </style>

@@ -14,6 +14,9 @@ html[data-theme='dark'] {
   --sakura-500: #a04060;
   --sakura-600: #7a2e4a;
   --text-primary: #f0e6ec;
+  --text-heading: #fff0f5;
+  --text-emphasis: #ffdddd;
+  --text-soft: rgba(210, 180, 194, 0.68);
   --text-muted: rgba(220, 180, 200, 0.5);
   --border-subtle: rgba(220, 160, 190, 0.1);
   --panel-bg: rgba(255, 255, 255, 0.02);
@@ -51,6 +54,9 @@ html[data-theme='light'] {
   --sakura-500: #b25579;
   --sakura-600: #8f3a5b;
   --text-primary: #4b2736;
+  --text-heading: #5a2d3d;
+  --text-emphasis: #8f3a5b;
+  --text-soft: rgba(96, 54, 72, 0.78);
   --text-muted: rgba(124, 76, 95, 0.62);
   --border-subtle: rgba(180, 115, 145, 0.14);
   --panel-bg: rgba(255, 255, 255, 0.5);

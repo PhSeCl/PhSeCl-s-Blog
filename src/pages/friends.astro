@@ -56,17 +56,26 @@ import PageLayout from '../layouts/PageLayout.astro';
     gap: 1rem;
     padding: 1.35rem;
     border: 1px solid rgba(220, 160, 190, 0.08);
-    background: rgba(255, 255, 255, 0.02);
+    border-radius: 1.2rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02)),
+      var(--panel-bg);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 10px 28px rgba(160, 60, 100, 0.05);
     transition:
       transform 0.4s ease,
       border-color 0.4s ease,
+      background 0.4s ease,
       box-shadow 0.4s ease;
   }
 
   .friend-card:hover {
     transform: translateY(-4px);
     border-color: rgba(220, 160, 190, 0.18);
-    box-shadow: 0 20px 60px rgba(160, 60, 100, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 20px 60px rgba(160, 60, 100, 0.08);
   }
 
   .friend-avatar {
@@ -99,7 +108,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .friend-body h2 {
     margin: 0 0 0.4rem;
-    color: var(--sakura-100);
+    color: var(--text-heading);
     font-family: 'Zen Old Mincho', serif;
     font-size: 1rem;
     font-weight: 400;
@@ -107,7 +116,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .friend-body p {
     margin: 0;
-    color: rgba(210, 180, 194, 0.68);
+    color: var(--text-soft);
     line-height: 1.8;
   }
 
