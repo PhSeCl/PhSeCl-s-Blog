@@ -1,5 +1,32 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
+
+const profileFacts = [
+  { key: 'about.fact.email', fallback: 'Email', value: 'xyxhcab@gmail.com', href: 'mailto:xyxhcab@gmail.com' },
+  {
+    key: 'about.fact.school',
+    fallback: 'School',
+    value: 'Sun-Yat San University',
+    href: 'https://www.sysu.edu.cn/',
+  },
+  {
+    key: 'about.fact.major',
+    fallback: 'Major',
+    value: 'Artificial Intellect',
+    href: 'https://sai.sysu.edu.cn/',
+  },
+];
+
+const profileTags = [
+  'TypeScript',
+  'Astro',
+  'Canvas',
+  '日本語',
+  '音楽',
+  'ずっと真夜中でいいのに',
+  'tennis',
+  'Galgame',
+];
 ---
 
 <PageLayout
@@ -28,22 +55,43 @@ import PageLayout from '../layouts/PageLayout.astro';
       <p data-i18n="about.intro">
         在这里，我想把技术、日常、审美和那些深夜里短暂却真实的想法，慢慢整理成可以回看的文字。
       </p>
+
+      <ul class="profile-facts" aria-label="Profile details">
+        {
+          profileFacts.map((fact, index) => (
+            <li class="profile-fact">
+              <span class="profile-fact-icon" aria-hidden="true">
+                {index === 0 ? '@' : index === 1 ? '[]' : '<>'}
+              </span>
+              {
+                fact.href ? (
+                  <a class="profile-fact-value" href={fact.href}>
+                    {fact.value}
+                  </a>
+                ) : (
+                  <span class="profile-fact-value">{fact.value}</span>
+                )
+              }
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
   <section class="about-section">
     <h2 data-i18n="about.skills">兴趣 / Skills</h2>
     <div class="tag-list">
-      <span>TypeScript</span>
-      <span>Astro</span>
-      <span>Canvas</span>
-      <span>日本語</span>
-      <span>音楽</span>
+      {
+        profileTags.map((tag) => (
+          <span>{tag}</span>
+        ))
+      }
     </div>
   </section>
 
   <section class="about-section">
-    <h2 data-i18n="about.timeline">歩いてきた道</h2>
+    <h2 data-i18n="about.timeline">成长轨迹</h2>
     <div class="timeline">
       <article class="timeline-item">
         <div class="year">Now</div>
@@ -56,7 +104,7 @@ import PageLayout from '../layouts/PageLayout.astro';
         <div class="year">Soon</div>
         <div class="content">
           <h3>More notes, more works</h3>
-          <p><!-- 后续将在这里扩展更完整的时间线内容 --></p>
+          <p><!-- 后续将在这里扩展更完整的时间线内容。 --></p>
         </div>
       </article>
     </div>
@@ -66,7 +114,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 <style>
   .about-intro {
     display: grid;
-    grid-template-columns: 120px minmax(0, 1fr);
+    grid-template-columns: 156px minmax(0, 1fr);
     gap: 2rem;
     align-items: center;
     margin-bottom: 3rem;
@@ -74,8 +122,8 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .avatar-shell {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 156px;
+    height: 156px;
   }
 
   .avatar-fallback,
@@ -101,9 +149,10 @@ import PageLayout from '../layouts/PageLayout.astro';
   }
 
   .intro-copy p {
-    margin: 0;
+    margin: 0 0 1.15rem;
     color: var(--text-soft);
     line-height: 1.95;
+    max-width: 38rem;
   }
 
   .about-name {
@@ -113,6 +162,49 @@ import PageLayout from '../layouts/PageLayout.astro';
     font-size: clamp(1.5rem, 2.8vw, 2rem);
     font-weight: 400;
     letter-spacing: 0.08em;
+  }
+
+  .profile-facts {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .profile-fact {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-soft);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .profile-fact-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  .profile-fact-value {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    word-break: break-word;
+    transition: color 0.25s ease;
+  }
+
+  a.profile-fact-value:hover {
+    color: var(--sakura-300);
   }
 
   .about-section {
@@ -136,7 +228,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   .tag-list span {
     border: 1px solid rgba(160, 60, 100, 0.2);
-    border-radius: 2px;
+    border-radius: 999px;
     padding: 0.28em 0.9em;
     color: var(--sakura-300);
     font-family: 'Noto Sans JP', sans-serif;
@@ -213,6 +305,10 @@ import PageLayout from '../layouts/PageLayout.astro';
     .timeline-item {
       grid-template-columns: 1fr;
       gap: 0.35rem;
+    }
+
+    .profile-fact {
+      align-items: flex-start;
     }
   }
 </style>
