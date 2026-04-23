@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;600&family=Zen+Old+Mincho:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-deep: #0a0608;
+  --bg-surface: #0d0810;
+  --sakura-50: #fff5f8;
+  --sakura-100: #fff0f5;
+  --sakura-200: #ffdddd;
+  --sakura-300: #f5b8cc;
+  --sakura-400: #d4789a;
+  --sakura-500: #a04060;
+  --sakura-600: #7a2e4a;
+  --text-primary: #f0e6ec;
+  --text-muted: rgba(220, 180, 200, 0.5);
+  --border-subtle: rgba(220, 160, 190, 0.1);
+}
+
+html {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Shippori Mincho', serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at top, rgba(160, 64, 96, 0.1), transparent 35%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+  color: var(--text-primary);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
