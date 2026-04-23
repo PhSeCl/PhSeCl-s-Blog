@@ -1,17 +1,171 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { formatBlogDate, type BlogEntry } from '../utils/blog';
 
 interface Props {
-  title?: string;
-  description?: string;
+  post: BlogEntry;
+  previous?: BlogEntry;
+  next?: BlogEntry;
 }
 
-const { title = 'Blog', description = 'Blog post layout placeholder' } = Astro.props;
+const { post, previous, next } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
-  <main>
-    <slot />
+<BaseLayout title={`${post.data.title} — PhSeCl`} description={post.data.description}>
+  <main class="blog-post-layout">
+    <article class="post-shell">
+      <header class="post-header">
+        <p class="post-date">{formatBlogDate(post.data.date)}</p>
+        <h1>{post.data.title}</h1>
+        {
+          post.data.tags.length > 0 && (
+            <div class="post-tags">
+              {post.data.tags.map((tag) => (
+                <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <section class="post-content prose prose-invert prose-sakura">
+        <slot />
+      </section>
+
+      <nav class="post-pagination" aria-label="Post pagination">
+        <div class="post-pagination-item">
+          {
+            previous && (
+              <a href={`/blog/${previous.id}`}>
+                <span class="direction">← Previous</span>
+                <span class="title">{previous.data.title}</span>
+              </a>
+            )
+          }
+        </div>
+        <div class="post-pagination-item align-right">
+          {
+            next && (
+              <a href={`/blog/${next.id}`}>
+                <span class="direction">Next →</span>
+                <span class="title">{next.data.title}</span>
+              </a>
+            )
+          }
+        </div>
+      </nav>
+
+      <!-- Giscus 评论将在下一阶段接入 -->
+    </article>
   </main>
 </BaseLayout>
 
+<style>
+  .blog-post-layout {
+    padding: 7rem 1.5rem 5rem;
+  }
+
+  .post-shell {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .post-header {
+    margin-bottom: 3rem;
+  }
+
+  .post-date {
+    margin: 0 0 0.9rem;
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.76rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .post-header h1 {
+    margin: 0;
+    color: var(--sakura-100);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.4rem;
+  }
+
+  .post-tags a {
+    border: 1px solid rgba(160, 60, 100, 0.2);
+    border-radius: 2px;
+    padding: 0.25em 0.85em;
+    color: var(--sakura-400);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    opacity: 0.8;
+  }
+
+  .post-content {
+    max-width: 48rem;
+  }
+
+  .post-pagination {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(220, 160, 190, 0.1);
+  }
+
+  .post-pagination-item {
+    min-height: 3rem;
+  }
+
+  .post-pagination-item.align-right {
+    text-align: right;
+  }
+
+  .post-pagination a {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .post-pagination .direction {
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .post-pagination .title {
+    color: var(--sakura-100);
+    font-family: 'Shippori Mincho', serif;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 767px) {
+    .blog-post-layout {
+      padding-top: 6rem;
+    }
+
+    .post-pagination {
+      grid-template-columns: 1fr;
+    }
+
+    .post-pagination-item.align-right {
+      text-align: left;
+    }
+  }
+</style>

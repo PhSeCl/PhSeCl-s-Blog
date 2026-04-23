@@ -1,10 +1,83 @@
 ---
-import PageLayout from '../../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import BlogCard from '../../components/BlogCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sortBlogPosts } from '../../utils/blog';
+
+const posts = sortBlogPosts(
+  await getCollection('blog', ({ data }) => !data.draft),
+);
 ---
 
-<PageLayout title="Blog — PhSeCl" description="Blog index placeholder">
-  <section class="mx-auto max-w-5xl px-6 py-24">
-    <h1 class="font-display text-4xl text-sakura-100">Blog</h1>
-  </section>
-</PageLayout>
+<BaseLayout title="Blog — PhSeCl" description="Thoughts, notes, and technical writing from PhSeCl">
+  <main class="blog-index">
+    <section class="blog-section">
+      <div class="section-header">
+        <h1 data-i18n="blog.latest">最新の記事</h1>
+        <div class="line"></div>
+      </div>
 
+      <div class="blog-grid">
+        {
+          posts.map((post) => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              date={post.data.date}
+              tags={post.data.tags}
+              slug={post.id}
+            />
+          ))
+        }
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .blog-index {
+    padding-top: 2rem;
+  }
+
+  .blog-section {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    padding: 6rem 8%;
+    background: linear-gradient(to bottom, var(--bg-deep) 0%, #0d0810 100%);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    margin-bottom: 3rem;
+  }
+
+  .section-header h1 {
+    margin: 0;
+    color: var(--sakura-100);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+  }
+
+  .section-header .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(220, 160, 190, 0.22), transparent);
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 767px) {
+    .blog-section {
+      padding: 5rem 1.5rem 4rem;
+    }
+  }
+</style>
