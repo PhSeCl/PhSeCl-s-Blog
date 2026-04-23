@@ -5,5 +5,13 @@
         "tags": ["Python", "数据分析", "情感分析", "可视化"],
         "url": "https://github.com/PhSeCl/Bilibili-Comment-and-Danmaku-Analysis",
         "cover": "/media/works/lun04b.png"
+    },
+
+    {
+        "title": "Tennis-Scheduler",
+        "description": "基于有向无环图 (DAG) 与束搜索 (Beam Search) 的网球赛事智能排程引擎。通过集合运算与马尔可夫状态裂变，在多项式时间内求解跨项目兼项的组合优化难题。",
+        "tags": ["Python", "算法", "优化"],
+        "url": "https://github.com/PhSeCl/Tennis-Scheduler",
+        "cover": "/media/works/lun01a.png"
     }
 ]
