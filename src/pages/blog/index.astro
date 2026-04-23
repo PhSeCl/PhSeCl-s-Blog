@@ -30,15 +30,21 @@ const posts = sortBlogPosts(
 
         <div class="blog-grid">
           {
-            posts.map((post) => (
-              <BlogCard
-                title={post.data.title}
-                description={post.data.description}
-                date={post.data.date}
-                tags={post.data.tags}
-                slug={post.id}
-              />
-            ))
+            posts.length > 0 ? (
+              posts.map((post) => (
+                <BlogCard
+                  title={post.data.title}
+                  description={post.data.description}
+                  date={post.data.date}
+                  tags={post.data.tags}
+                  slug={post.id}
+                />
+              ))
+            ) : (
+              <p class="empty-state" data-i18n="blog.empty">
+                まだ記事はありません。最初の一篇は、もうすぐここに。
+              </p>
+            )
           }
         </div>
       </div>
@@ -73,7 +79,7 @@ const posts = sortBlogPosts(
 
   .section-header h1 {
     margin: 0;
-    color: var(--sakura-100);
+    color: var(--text-heading);
     font-family: 'Zen Old Mincho', serif;
     font-size: 1.6rem;
     font-weight: 400;
@@ -90,6 +96,14 @@ const posts = sortBlogPosts(
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
+  }
+
+  .empty-state {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 0.95rem;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
   }
 
   @media (max-width: 767px) {

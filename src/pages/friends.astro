@@ -19,21 +19,27 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   <section class="friends-grid">
     {
-      friends.map((friend) => (
-        <article class="friend-card">
-          <div class="friend-avatar">
-            <div class="friend-avatar-fallback" aria-hidden="true"></div>
-            <img src={friend.avatar} alt="" onerror="this.classList.add('is-hidden')" />
-          </div>
-          <div class="friend-body">
-            <h2>{friend.name}</h2>
-            <p>{friend.description}</p>
-            <a href={friend.url} target="_blank" rel="noreferrer">
-              {friend.url}
-            </a>
-          </div>
-        </article>
-      ))
+      friends.length > 0 ? (
+        friends.map((friend) => (
+          <article class="friend-card">
+            <div class="friend-avatar">
+              <div class="friend-avatar-fallback" aria-hidden="true"></div>
+              <img src={friend.avatar} alt="" onerror="this.classList.add('is-hidden')" />
+            </div>
+            <div class="friend-body">
+              <h2>{friend.name}</h2>
+              <p>{friend.description}</p>
+              <a href={friend.url} target="_blank" rel="noreferrer">
+                {friend.url}
+              </a>
+            </div>
+          </article>
+        ))
+      ) : (
+        <p class="empty-state" data-i18n="friends.empty">
+          友链还在整理中，等风景慢慢聚齐。
+        </p>
+      )
     }
   </section>
 </PageLayout>
@@ -41,7 +47,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 <style>
   .page-intro {
     margin: 0 0 2rem;
-    color: rgba(224, 198, 210, 0.74);
+    color: var(--text-soft);
     line-height: 1.9;
   }
 
@@ -49,6 +55,13 @@ import PageLayout from '../layouts/PageLayout.astro';
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.6rem;
+  }
+
+  .empty-state {
+    margin: 0;
+    color: var(--text-soft);
+    line-height: 1.9;
+    letter-spacing: 0.08em;
   }
 
   .friend-card {
