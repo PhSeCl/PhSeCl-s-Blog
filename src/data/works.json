@@ -4,20 +4,20 @@
     "description": "基于 Astro 的个人博客，樱花夜色主题",
     "tags": ["Astro", "Canvas", "Tailwind"],
     "url": "https://phsecl.com",
-    "cover": "/images/works/blog.webp"
+    "cover": "/media/works/blog.webp"
   },
   {
     "title": "Sakura Canvas Study",
     "description": "围绕花瓣粒子与夜色背景做的创意前端实验",
     "tags": ["Canvas", "TypeScript", "Performance"],
     "url": "https://example.com/sakura-study",
-    "cover": "/images/works/sakura-study.webp"
+    "cover": "/media/works/sakura-study.webp"
   },
   {
     "title": "Motion Notes",
     "description": "整理网页动效、字体和氛围化表达的一组设计笔记",
     "tags": ["Design", "Typography", "Astro"],
     "url": "https://example.com/motion-notes",
-    "cover": "/images/works/motion-notes.webp"
+    "cover": "/media/works/motion-notes.webp"
   }
 ]

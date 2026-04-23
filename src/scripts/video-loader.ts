@@ -1,3 +1,5 @@
+import { getTheme, resolveThemedAsset, type Theme } from '../utils/theme';
+
 type LoadingMode = 'auto' | 'manual' | 'poster';
 
 interface NetworkLike {
@@ -49,6 +51,37 @@ export function decideVideoLoadingMode({
   }
 
   return { shouldLoad: false, showPlayButton: false, mode: 'poster' };
+}
+
+function resolvePosterAsset(poster: HTMLImageElement, theme: Theme): string {
+  return resolveThemedAsset(
+    {
+      default: poster.dataset.posterDefault,
+      dark: poster.dataset.posterDark,
+      light: poster.dataset.posterLight,
+    },
+    theme,
+  );
+}
+
+function applyPosterTheme(poster?: HTMLImageElement | null, theme = getTheme()): void {
+  if (!poster) {
+    return;
+  }
+
+  const asset = resolvePosterAsset(poster, theme);
+
+  if (!asset) {
+    poster.classList.add('poster-missing');
+    poster.removeAttribute('src');
+    return;
+  }
+
+  poster.classList.remove('poster-missing');
+
+  if (poster.getAttribute('src') !== asset) {
+    poster.src = asset;
+  }
 }
 
 function revealVideo(video: HTMLVideoElement, poster?: HTMLImageElement | null): void {
@@ -115,21 +148,35 @@ function loadVideo(
 export function initVideoLoader(root: ParentNode = document): void {
   const hero = root.querySelector<HTMLElement>('[data-video-hero]');
 
-  if (!hero || hero.dataset.videoLoaderReady === 'true') {
+  if (!hero) {
     return;
   }
-
-  hero.dataset.videoLoaderReady = 'true';
 
   const poster = hero.querySelector<HTMLImageElement>('[data-hero-poster]');
   const video = hero.querySelector<HTMLVideoElement>('[data-hero-video]');
   const playButton = hero.querySelector<HTMLButtonElement>('[data-video-play]');
+
+  applyPosterTheme(poster);
+
+  if (hero.dataset.videoLoaderReady === 'true') {
+    return;
+  }
+
+  hero.dataset.videoLoaderReady = 'true';
 
   if (!video) {
     return;
   }
 
   poster?.addEventListener('error', () => hidePosterIfMissing(poster), { once: true });
+
+  window.addEventListener('theme-change', (event: Event) => {
+    const detail = (event as CustomEvent<{ theme?: Theme }>).detail;
+
+    if (!video.classList.contains('is-visible')) {
+      applyPosterTheme(poster, detail.theme ?? getTheme());
+    }
+  });
 
   const connection = (navigator as Navigator & {
     connection?: NetworkLike;

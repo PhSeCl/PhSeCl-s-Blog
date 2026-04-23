@@ -1,6 +1,6 @@
 ---
-title: 用 Canvas 2D 做樱花粒子时，我最先优化的不是算法
-description: 记录实现樱花粒子系统时，真正影响流畅度的几个关键决定。
+title: What Actually Matters When Optimizing a Canvas Particle Scene
+description: Notes from tuning a sakura particle system without losing the softness of the visual effect.
 date: 2025-04-10
 tags:
   - creative
@@ -10,8 +10,8 @@ draft: false
 readingTime: 5
 ---
 
-很多人一提到粒子效果，第一反应是“这个是不是得上 WebGL”。但对于个人站首页这样的场景，我更在意的是加载成本、调试门槛和后期维护难度，所以一开始就决定先用 Canvas 2D 把最核心的视觉做出来。
+People often assume that rich particle effects immediately require WebGL, but for a personal homepage that is not always true. In this case, Canvas 2D was enough, as long as the implementation stayed disciplined.
 
-真正写起来以后我发现，决定体感流畅度的并不只是“算法有没有多高级”，而是一些看起来很小的实现细节。比如花瓣数量是不是过多、是不是在高 DPR 屏上把像素数放大了四倍、是不是给每个粒子都套了 blur。这些选择叠在一起，往往比公式复杂一点更影响帧率。
+The biggest performance wins did not come from clever math. They came from practical choices: fewer petals, lower DPR on mobile, less path complexity, and no expensive blur filters inside the render loop.
 
-最后比较有效的思路反而很朴素：少一点花瓣、更多层次；少一点滤镜、更多透明度差异；少一点昂贵路径、更多椭圆和简单曲线。对首页这种持续运行的背景动效来说，稳定和克制本身就是美感的一部分。
+That trade-off felt right for this project. The goal was not to simulate everything perfectly. The goal was to create a scene that feels alive, remains readable, and can run smoothly for a long time in the background.

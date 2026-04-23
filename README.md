@@ -1,6 +1,6 @@
 # PhSeCl.com
 
-PhSeCl.com 是一个以樱花夜色为主题的个人博客与作品主页，使用 Astro 构建，强调轻量、氛围感与长期可扩展性。
+PhSeCl.com 是一个以樱花夜色为主题的个人博客与作品主页，使用 Astro 构建，强调轻量、氛围感与长期可扩展性。站点默认暗色模式，并支持亮色主题与按主题切换素材。
 
 ## 技术栈
 
@@ -32,13 +32,35 @@ npm run build
 - 构建命令：`npm run build`
 - 输出目录：`dist/`
 
-## 素材说明
+## 素材目录
 
-以下素材需要手动放入仓库中的对应目录，代码已预留引用与降级逻辑：
+项目中的美术素材统一建议放在 `public/media/` 下，便于后续扩展：
 
-- `public/video/hero-bg.mp4`
-- `public/images/hero-cover.webp`
-- `public/images/avatar.webp`
-- `public/images/og-image.png`
+- `public/media/site/hero/`
+  首页视频、封面图等站点级 Hero 素材
+- `public/media/site/branding/`
+  OG 图等品牌相关素材
+- `public/media/pages/<page-slug>/`
+  各个子页面未来可单独使用的背景图
+- `public/media/people/`
+  头像等人物素材
+- `public/media/works/`
+  作品封面
+- `public/media/friends/`
+  友链头像
 
-如需扩展作品封面、友链头像等素材，也请继续放入 `public/images/` 下的对应路径。
+## 主题素材约定
+
+页面和组件支持以下三种素材组织方式：
+
+- 明暗各一张：`*-dark.*` / `*-light.*`
+- 只有一张通用图：`default`
+- 没有图片：自动退回默认背景，不报错
+
+## 当前需要手动放入的素材
+
+- `public/media/site/hero/video.mp4`
+- `public/media/site/hero/cover-dark.avif`
+- `public/media/site/hero/cover-light.avif`
+- `public/media/site/branding/og-image.png`
+- `public/media/people/avatar.webp`

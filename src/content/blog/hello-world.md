@@ -1,17 +1,16 @@
 ---
-title: 建站这件小事，为什么我又回到了 Astro
-description: 记录这次重建个人站时，为什么我最终还是选择了轻量、可控、偏静态的技术路径。
+title: Why I Returned to Astro for This Site
+description: A short note on why a light, content-first stack still feels right for a personal website.
 date: 2025-04-18
 tags:
   - devlog
   - astro
 draft: false
-cover: /images/hero-cover.webp
-readingTime: 4
+cover: /media/site/hero/cover-dark.avif
 ---
 
-这次重新做个人站，我最先排除的其实不是技术，而是“做得太像大家都在做的东西”。我希望首页打开的时候，先让人感受到气氛，再慢慢读到内容。这个目标会自然把我带向更克制的运行时、更明确的结构分层，以及更少的依赖。
+When I rebuilt this site, I was not looking for the most fashionable stack. I wanted something calm, readable, and easy to keep alive over time. That goal pushed me toward a setup with fewer moving parts and clearer boundaries.
 
-Astro 对我来说最舒服的一点，是它允许页面保持“文档感”。内容页就是内容页，布局是布局，交互只在真正需要的时候再加进去。对于一个以博客和个人表达为核心的网站，这种组织方式比一开始就把所有页面当成应用状态机要轻松得多。
+Astro works well for that kind of project because pages can stay pages first. The homepage, blog list, and article detail routes are mostly content surfaces. Interactivity still matters, but only in a few focused places such as the language switcher, theme switcher, particles, and media loading.
 
-另外，静态输出带来的可预测性也很重要。部署到 Cloudflare Pages 之后，我更关心的是页面是否稳定、资源是否简单、以后加新文章是否顺手，而不是为了一个不必要的动态能力，额外背上一套复杂的构建和运行负担。
+Static output also keeps the deployment story simple. I would rather spend my energy refining writing, visuals, and structure than maintaining a larger client runtime than this project really needs.

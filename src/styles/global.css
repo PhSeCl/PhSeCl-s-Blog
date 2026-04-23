@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+html[data-theme='dark'] {
   --bg-deep: #0a0608;
   --bg-surface: #0d0810;
   --sakura-50: #fff5f8;
@@ -15,6 +16,65 @@
   --text-primary: #f0e6ec;
   --text-muted: rgba(220, 180, 200, 0.5);
   --border-subtle: rgba(220, 160, 190, 0.1);
+  --panel-bg: rgba(255, 255, 255, 0.02);
+  --panel-bg-strong: rgba(13, 8, 16, 0.82);
+  --panel-border: rgba(220, 160, 190, 0.18);
+  --panel-border-strong: rgba(245, 184, 204, 0.35);
+  --panel-hover-bg: rgba(160, 64, 96, 0.14);
+  --panel-shadow: rgba(0, 0, 0, 0.28);
+  --page-background-mask:
+    linear-gradient(180deg, rgba(10, 6, 8, 0.78), rgba(13, 8, 16, 0.8)),
+    radial-gradient(circle at top, rgba(160, 64, 96, 0.1), transparent 35%);
+  --body-gradient:
+    radial-gradient(circle at top, rgba(160, 64, 96, 0.1), transparent 35%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+  --hero-surface-start: rgba(10, 6, 8, 0.985);
+  --hero-surface-end: rgba(15, 8, 12, 0.97);
+  --hero-fallback-accent: rgba(212, 120, 154, 0.12);
+  --hero-fallback-end: rgba(10, 6, 8, 1);
+  --hero-vignette-top: rgba(10, 6, 8, 0.36);
+  --hero-vignette-bottom: rgba(10, 6, 8, 0.56);
+  --hero-vignette-side: rgba(10, 6, 8, 0.16);
+  --hero-overlay-soft: rgba(10, 6, 8, 0.3);
+  --hero-overlay-strong: rgba(10, 6, 8, 0.96);
+  --hero-play-bg: rgba(10, 6, 8, 0.34);
+}
+
+html[data-theme='light'] {
+  --bg-deep: #f7eef2;
+  --bg-surface: #fff8fb;
+  --sakura-50: #fffefe;
+  --sakura-100: #fff7fa;
+  --sakura-200: #f5d7e2;
+  --sakura-300: #e6a9be;
+  --sakura-400: #d4789a;
+  --sakura-500: #b25579;
+  --sakura-600: #8f3a5b;
+  --text-primary: #4b2736;
+  --text-muted: rgba(124, 76, 95, 0.62);
+  --border-subtle: rgba(180, 115, 145, 0.14);
+  --panel-bg: rgba(255, 255, 255, 0.5);
+  --panel-bg-strong: rgba(255, 250, 252, 0.88);
+  --panel-border: rgba(180, 115, 145, 0.18);
+  --panel-border-strong: rgba(212, 120, 154, 0.34);
+  --panel-hover-bg: rgba(212, 120, 154, 0.1);
+  --panel-shadow: rgba(160, 84, 112, 0.12);
+  --page-background-mask:
+    linear-gradient(180deg, rgba(255, 249, 252, 0.7), rgba(247, 238, 242, 0.76)),
+    radial-gradient(circle at top, rgba(212, 120, 154, 0.12), transparent 35%);
+  --body-gradient:
+    radial-gradient(circle at top, rgba(212, 120, 154, 0.12), transparent 35%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+  --hero-surface-start: rgba(252, 244, 248, 0.92);
+  --hero-surface-end: rgba(255, 250, 252, 0.95);
+  --hero-fallback-accent: rgba(212, 120, 154, 0.16);
+  --hero-fallback-end: rgba(247, 238, 242, 1);
+  --hero-vignette-top: rgba(255, 246, 250, 0.3);
+  --hero-vignette-bottom: rgba(236, 215, 224, 0.38);
+  --hero-vignette-side: rgba(255, 247, 250, 0.2);
+  --hero-overlay-soft: rgba(247, 238, 242, 0.16);
+  --hero-overlay-strong: rgba(247, 238, 242, 0.88);
+  --hero-play-bg: rgba(255, 250, 252, 0.42);
 }
 
 html {
@@ -28,9 +88,7 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
-  background:
-    radial-gradient(circle at top, rgba(160, 64, 96, 0.1), transparent 35%),
-    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+  background: var(--body-gradient);
   color: var(--text-primary);
 }
 

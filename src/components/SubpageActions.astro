@@ -14,9 +14,9 @@ const { backFallback = '/' } = Astro.props;
     data-fallback={backFallback}
     data-i18n="action.back"
   >
-    返回上一级
+    Back
   </button>
-  <a class="subpage-action" href="/" data-i18n="action.home">返回首页</a>
+  <a class="subpage-action" href="/" data-i18n="action.home">Home</a>
 </nav>
 
 <script>
@@ -59,9 +59,9 @@ const { backFallback = '/' } = Astro.props;
     justify-content: center;
     min-width: 8.8rem;
     padding: 0.75rem 1.1rem;
-    border: 1px solid rgba(220, 160, 190, 0.18);
-    background: rgba(255, 255, 255, 0.02);
-    color: var(--sakura-100);
+    border: 1px solid var(--panel-border);
+    background: var(--panel-bg);
+    color: var(--text-primary);
     text-decoration: none;
     font-family: 'Noto Sans JP', sans-serif;
     font-size: 0.72rem;
@@ -79,8 +79,8 @@ const { backFallback = '/' } = Astro.props;
 
   .subpage-action:hover {
     transform: translateY(-2px);
-    border-color: rgba(245, 184, 204, 0.34);
-    background: rgba(160, 64, 96, 0.1);
+    border-color: var(--panel-border-strong);
+    background: var(--panel-hover-bg);
     box-shadow: 0 12px 30px rgba(160, 60, 100, 0.08);
   }
 

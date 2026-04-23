@@ -1,21 +1,21 @@
-<div class="lang-switcher" data-lang-switcher>
-  <button class="lang-trigger" type="button" data-lang-toggle aria-haspopup="true" aria-expanded="false">
-    <span data-lang-current>中</span>
+<div class="theme-switcher" data-theme-switcher>
+  <button class="theme-trigger" type="button" data-theme-toggle aria-haspopup="true" aria-expanded="false">
+    <span data-theme-current>夜</span>
   </button>
 
-  <div class="lang-menu" data-lang-menu hidden>
-    <button class="lang-option" type="button" data-lang-option="zh">中文</button>
-    <button class="lang-option" type="button" data-lang-option="ja">日本語</button>
-    <button class="lang-option" type="button" data-lang-option="en">English</button>
+  <div class="theme-menu" data-theme-menu hidden>
+    <button class="theme-option" type="button" data-theme-option="dark">暗色</button>
+    <button class="theme-option" type="button" data-theme-option="light">亮色</button>
   </div>
 </div>
 
 <script>
-  import { languages, type Lang } from '../i18n/ui';
-  import { getLang, setLang, t } from '../utils/i18n';
+  import { type Theme } from '../utils/theme';
+  import { getTheme, setTheme } from '../utils/theme';
+  import { t } from '../utils/i18n';
 
-  function initLanguageSwitcher() {
-    const root = document.querySelector<HTMLElement>('[data-lang-switcher]');
+  function initThemeSwitcher() {
+    const root = document.querySelector<HTMLElement>('[data-theme-switcher]');
 
     if (!root || root.dataset.ready === 'true') {
       return;
@@ -23,22 +23,22 @@
 
     root.dataset.ready = 'true';
 
-    const toggle = root.querySelector<HTMLButtonElement>('[data-lang-toggle]');
-    const menu = root.querySelector<HTMLElement>('[data-lang-menu]');
-    const current = root.querySelector<HTMLElement>('[data-lang-current]');
-    const options = root.querySelectorAll<HTMLButtonElement>('[data-lang-option]');
+    const toggle = root.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+    const menu = root.querySelector<HTMLElement>('[data-theme-menu]');
+    const current = root.querySelector<HTMLElement>('[data-theme-current]');
+    const options = root.querySelectorAll<HTMLButtonElement>('[data-theme-option]');
 
     if (!toggle || !menu || !current) {
       return;
     }
 
-    const updateLabel = (lang: Lang) => {
-      current.textContent = t(`switcher.current.${lang}`);
-      toggle.setAttribute('aria-label', t('switcher.menu'));
+    const updateLabel = (theme: Theme) => {
+      current.textContent = t(`theme.current.${theme}`);
+      toggle.setAttribute('aria-label', t('theme.menu'));
 
       options.forEach((option) => {
-        const optionLang = option.dataset.langOption as Lang;
-        option.textContent = languages[optionLang];
+        const optionTheme = option.dataset.themeOption as Theme;
+        option.textContent = t(`theme.option.${optionTheme}`);
       });
     };
 
@@ -52,7 +52,7 @@
       toggle.setAttribute('aria-expanded', 'true');
     };
 
-    updateLabel(getLang());
+    updateLabel(getTheme());
 
     toggle.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -61,8 +61,9 @@
 
     options.forEach((option) => {
       option.addEventListener('click', () => {
-        const nextLang = option.dataset.langOption as Lang;
-        setLang(nextLang);
+        const nextTheme = option.dataset.themeOption as Theme;
+        setTheme(nextTheme);
+        updateLabel(nextTheme);
         closeMenu();
       });
     });
@@ -73,39 +74,43 @@
       }
     });
 
-    window.addEventListener('lang-change', ((event: Event) => {
-      const detail = (event as CustomEvent<{ lang: Lang }>).detail;
-      updateLabel(detail.lang);
+    window.addEventListener('theme-change', ((event: Event) => {
+      const detail = (event as CustomEvent<{ theme: Theme }>).detail;
+      updateLabel(detail.theme);
     }) as EventListener);
+
+    window.addEventListener('lang-change', () => {
+      updateLabel(getTheme());
+    });
   }
 
-  document.addEventListener('astro:page-load', initLanguageSwitcher);
-  document.addEventListener('astro:after-swap', initLanguageSwitcher);
-  initLanguageSwitcher();
+  document.addEventListener('astro:page-load', initThemeSwitcher);
+  document.addEventListener('astro:after-swap', initThemeSwitcher);
+  initThemeSwitcher();
 </script>
 
 <style>
-  .lang-switcher {
+  .theme-switcher {
     position: fixed;
     top: 1.5rem;
-    right: 1.5rem;
+    right: 6.2rem;
     z-index: 30;
     font-family: 'Noto Sans JP', sans-serif;
   }
 
-  .lang-trigger,
-  .lang-option {
+  .theme-trigger,
+  .theme-option {
     border: 1px solid var(--panel-border);
     background: var(--panel-bg-strong);
     color: var(--text-primary);
     cursor: pointer;
   }
 
-  .lang-trigger {
-    min-width: 3.4rem;
+  .theme-trigger {
+    min-width: 3.8rem;
     padding: 0.55rem 0.8rem;
     font-size: 0.72rem;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     backdrop-filter: blur(8px);
     transition:
       border-color 0.25s ease,
@@ -113,13 +118,13 @@
       background 0.25s ease;
   }
 
-  .lang-trigger:hover {
+  .theme-trigger:hover {
     transform: translateY(-1px);
     border-color: var(--panel-border-strong);
     background: var(--panel-hover-bg);
   }
 
-  .lang-menu {
+  .theme-menu {
     display: grid;
     gap: 0.35rem;
     margin-top: 0.55rem;
@@ -130,7 +135,7 @@
     backdrop-filter: blur(10px);
   }
 
-  .lang-option {
+  .theme-option {
     min-width: 7rem;
     padding: 0.55rem 0.8rem;
     text-align: left;
@@ -142,16 +147,16 @@
       background 0.25s ease;
   }
 
-  .lang-option:hover {
+  .theme-option:hover {
     color: var(--sakura-50);
     border-color: var(--panel-border-strong);
     background: var(--panel-hover-bg);
   }
 
   @media (max-width: 767px) {
-    .lang-switcher {
+    .theme-switcher {
       top: 1rem;
-      right: 1rem;
+      right: 5.4rem;
     }
   }
 </style>

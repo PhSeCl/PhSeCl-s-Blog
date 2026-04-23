@@ -2,7 +2,14 @@
 import { ViewTransitions } from 'astro:transitions';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import SakuraCanvas from '../components/SakuraCanvas.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import '../styles/global.css';
+
+interface BackgroundAssets {
+  default?: string;
+  dark?: string;
+  light?: string;
+}
 
 interface Props {
   title?: string;
@@ -15,6 +22,7 @@ interface Props {
   ogType?: 'website' | 'article';
   articlePublishedTime?: string;
   articleTags?: string[];
+  backgroundAssets?: BackgroundAssets;
 }
 
 const {
@@ -28,15 +36,19 @@ const {
   ogType = 'website',
   articlePublishedTime,
   articleTags = [],
+  backgroundAssets,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://phsecl.com');
-const ogImageUrl = new URL('/images/og-image.png', Astro.site ?? 'https://phsecl.com');
+const ogImageUrl = new URL('/media/site/branding/og-image.png', Astro.site ?? 'https://phsecl.com');
 const finalTitle = title === 'PhSeCl' ? title : `${title} \u2014 PhSeCl`;
+const hasBackgroundAssets = Boolean(
+  backgroundAssets?.default || backgroundAssets?.dark || backgroundAssets?.light,
+);
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -82,16 +94,35 @@ const finalTitle = title === 'PhSeCl' ? title : `${title} \u2014 PhSeCl`;
     <slot name="head" />
   </head>
   <body>
+    {
+      hasBackgroundAssets && (
+        <div
+          class="page-background"
+          aria-hidden="true"
+          data-page-background
+          data-asset-default={backgroundAssets?.default}
+          data-asset-dark={backgroundAssets?.dark}
+          data-asset-light={backgroundAssets?.light}
+        ></div>
+      )
+    }
+
     <SakuraCanvas />
-    <LanguageSwitcher />
-    <slot />
+
+    <div class="page-root">
+      <ThemeSwitcher />
+      <LanguageSwitcher />
+      <slot />
+    </div>
+
     <div class="global-vignette" aria-hidden="true"></div>
   </body>
 </html>
 
 <script>
-  import { initI18n, getLang } from '../utils/i18n';
   import { ui, type Lang } from '../i18n/ui';
+  import { getLang, initI18n } from '../utils/i18n';
+  import { getTheme, initTheme, resolveThemedAsset, type Theme } from '../utils/theme';
 
   function withSuffix(title: string): string {
     return title === 'PhSeCl' ? title : `${title} \u2014 PhSeCl`;
@@ -134,21 +165,67 @@ const finalTitle = title === 'PhSeCl' ? title : `${title} \u2014 PhSeCl`;
     }
   }
 
-  function initTranslations() {
-    initI18n();
-    applySeoTranslations(getLang());
+  function applyPageBackground(theme: Theme): void {
+    const background = document.querySelector<HTMLElement>('[data-page-background]');
+
+    if (!background) {
+      return;
+    }
+
+    const asset = resolveThemedAsset(
+      {
+        default: background.dataset.assetDefault,
+        dark: background.dataset.assetDark,
+        light: background.dataset.assetLight,
+      },
+      theme,
+    );
+
+    background.style.backgroundImage = asset
+      ? `var(--page-background-mask), url("${asset}")`
+      : 'none';
+    background.classList.toggle('is-empty', !asset);
   }
 
-  document.addEventListener('astro:page-load', initTranslations);
-  document.addEventListener('astro:after-swap', initTranslations);
+  function initPageState() {
+    initI18n();
+    applySeoTranslations(getLang());
+    applyPageBackground(initTheme());
+  }
+
+  document.addEventListener('astro:page-load', initPageState);
+  document.addEventListener('astro:after-swap', initPageState);
   window.addEventListener('lang-change', (event: Event) => {
     const detail = (event as CustomEvent<{ lang?: Lang }>).detail;
     applySeoTranslations(detail?.lang ?? getLang());
   });
-  initTranslations();
+  window.addEventListener('theme-change', (event: Event) => {
+    const detail = (event as CustomEvent<{ theme?: Theme }>).detail;
+    applyPageBackground(detail?.theme ?? getTheme());
+  });
+  initPageState();
 </script>
 
 <style>
+  .page-root {
+    position: relative;
+    z-index: 2;
+  }
+
+  .page-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: opacity 0.45s ease, filter 0.45s ease;
+  }
+
+  .page-background.is-empty {
+    opacity: 0;
+  }
+
   .global-vignette {
     position: fixed;
     inset: 0;
