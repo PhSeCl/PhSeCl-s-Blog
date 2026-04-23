@@ -1,16 +1,161 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import VideoHero from '../components/VideoHero.astro';
+
+const latestPosts = [
+  {
+    date: '2025.04.18',
+    title: 'Next.js 15 の新機能を試してみた',
+    description: 'App Router の改善点とパフォーマンス最適化について実際のプロジェクトで検証した結果をまとめます。',
+    tag: 'FRONTEND',
+  },
+  {
+    date: '2025.04.10',
+    title: 'Canvas 2D で桜を降らせる',
+    description: 'GPU を使わずにブラウザ上で美しいパーティクルエフェクトを実装する方法について。',
+    tag: 'CREATIVE',
+  },
+  {
+    date: '2025.03.28',
+    title: '個人サイトを Astro で再構築した話',
+    description: 'WordPress から Jamstack への移行記録。ビルド時間、パフォーマンス、開発体験の比較。',
+    tag: 'DEVLOG',
+  },
+];
 ---
 
-<BaseLayout title="PhSeCl" description="PhSeCl.com under construction">
-  <main class="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6 py-20 text-center">
-    <div>
-      <p class="font-ui text-sm uppercase tracking-[0.4em] text-text-muted">PhSeCl.com</p>
-      <h1 class="mt-4 font-display text-5xl text-sakura-100">Site Foundation Ready</h1>
-      <p class="mt-6 text-base text-text-muted">
-        The homepage visual module will be implemented next.
-      </p>
-    </div>
+<BaseLayout title="PhSeCl" description="PhSeCl.com personal website homepage">
+  <main>
+    <VideoHero />
+
+    <section class="blog-section" id="latest-posts">
+      <div class="section-header">
+        <h2>最新の記事</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="blog-grid">
+        {
+          latestPosts.map((post) => (
+            <article class="blog-card">
+              <div class="date">{post.date}</div>
+              <h3>{post.title}</h3>
+              <p>{post.description}</p>
+              <span class="tag">{post.tag}</span>
+            </article>
+          ))
+        }
+      </div>
+    </section>
   </main>
 </BaseLayout>
 
+<style>
+  .blog-section {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, var(--bg-deep) 0%, #0d0810 100%);
+    padding: 6rem 8%;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    margin-bottom: 3rem;
+  }
+
+  .section-header h2 {
+    margin: 0;
+    color: var(--sakura-100);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+  }
+
+  .section-header .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(220, 160, 190, 0.22), transparent);
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .blog-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(220, 160, 190, 0.08);
+    border-radius: 4px;
+    padding: 2rem;
+    transition:
+      transform 0.45s ease,
+      border-color 0.45s ease,
+      background 0.45s ease,
+      box-shadow 0.45s ease;
+  }
+
+  .blog-card:hover {
+    background: rgba(220, 160, 190, 0.045);
+    border-color: rgba(220, 160, 190, 0.18);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(160, 60, 100, 0.08);
+  }
+
+  .blog-card .date {
+    margin-bottom: 0.8rem;
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+  }
+
+  .blog-card h3 {
+    margin: 0 0 0.8rem;
+    color: var(--sakura-100);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .blog-card p {
+    margin: 0;
+    color: rgba(200, 170, 185, 0.45);
+    font-size: 0.82rem;
+    line-height: 1.8;
+  }
+
+  .blog-card .tag {
+    display: inline-block;
+    margin-top: 1rem;
+    border: 1px solid rgba(160, 60, 100, 0.2);
+    border-radius: 2px;
+    padding: 0.2em 0.8em;
+    color: var(--sakura-400);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 767px) {
+    .blog-section {
+      padding: 4rem 1.5rem;
+    }
+
+    .section-header {
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+    }
+  }
+</style>
