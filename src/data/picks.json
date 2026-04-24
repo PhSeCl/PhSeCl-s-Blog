@@ -4,6 +4,7 @@
       "id": "games",
       "label": { "zh": "游戏", "ja": "ゲーム", "en": "Games" },
       "icon": "gamepad",
+      "featured": 0,
       "items": [
         {
           "title": "NieR:Automata",
@@ -32,6 +33,7 @@
       "id": "music",
       "label": { "zh": "音乐", "ja": "音楽", "en": "Music" },
       "icon": "music",
+      "featured": 1,
       "items": [
         {
           "title": "Yorushika - 花に亡霊",
@@ -60,6 +62,7 @@
       "id": "projects",
       "label": { "zh": "项目", "ja": "プロジェクト", "en": "Projects" },
       "icon": "code",
+      "featured": 2,
       "items": [
         {
           "title": "Astro",

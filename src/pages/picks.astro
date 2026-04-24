@@ -15,6 +15,7 @@ interface PickCategory {
   id: string;
   label: Record<Lang, string>;
   icon: string;
+  featured?: number;
   items: PickItem[];
 }
 
@@ -60,50 +61,73 @@ const iconMap: Record<string, string> = {
   <div class="picks-sections">
     {
       categories.map((category) => (
-        <section class="pick-section" id={category.id}>
-          <div class="section-header">
-            <h2
-              data-picks-label
-              data-label-zh={category.label.zh}
-              data-label-ja={category.label.ja}
-              data-label-en={category.label.en}
-            >
-              {category.label.zh}
-            </h2>
-            <span class="section-icon" aria-hidden="true">{iconMap[category.icon] ?? category.icon}</span>
-            <div class="line"></div>
-          </div>
+        (() => {
+          const featuredItem = category.items[category.featured];
+          const hasFeaturedItem = featuredItem !== undefined;
+          const orderedItems = featuredItem
+            ? [featuredItem, ...category.items.filter((item) => item !== featuredItem)]
+            : category.items;
 
-          <div class="picks-grid">
-            {
-              category.items.map((item) => (
-                <a class="pick-card" href={item.url} target="_blank" rel="noreferrer">
-                  <div class="pick-cover" data-error="false">
-                    <div class="pick-cover-fallback" aria-hidden="true"></div>
-                    <img
-                      src={item.cover}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      onerror="this.closest('.pick-cover')?.setAttribute('data-error', 'true')"
-                    />
-                  </div>
+          return (
+            <section class="pick-section" id={category.id}>
+              <div class="section-header">
+                <h2
+                  data-picks-label
+                  data-label-zh={category.label.zh}
+                  data-label-ja={category.label.ja}
+                  data-label-en={category.label.en}
+                >
+                  {category.label.zh}
+                </h2>
+                <span class="section-icon" aria-hidden="true">{iconMap[category.icon] ?? category.icon}</span>
+                <div class="line"></div>
+              </div>
 
-                  <div class="pick-body">
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
+              <div class="picks-grid">
+                {
+                  orderedItems.map((item, itemIndex) => (
+                    <a
+                      class:list={{
+                        'pick-card': true,
+                        'pick-card-featured': itemIndex === 0 && hasFeaturedItem,
+                      }}
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <div class="pick-cover" data-error="false">
+                        <div class="pick-cover-fallback" aria-hidden="true"></div>
+                        <img
+                          src={item.cover}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          onerror="this.closest('.pick-cover')?.setAttribute('data-error', 'true')"
+                        />
+                        {
+                          itemIndex === 0 && hasFeaturedItem ? (
+                            <span class="pick-badge" data-i18n="picks.featured">置顶</span>
+                          ) : null
+                        }
+                      </div>
 
-                    <div class="tag-row">
-                      {item.tags.map((tag) => (
-                        <span class="tag">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </a>
-              ))
-            }
-          </div>
-        </section>
+                      <div class="pick-body">
+                        <h3>{item.title}</h3>
+                        <p>{item.description}</p>
+
+                        <div class="tag-row">
+                          {item.tags.map((tag) => (
+                            <span class="tag">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </a>
+                  ))
+                }
+              </div>
+            </section>
+          );
+        })()
       ))
     }
   </div>
@@ -243,6 +267,13 @@ const iconMap: Record<string, string> = {
     box-shadow: 0 20px 60px rgba(160, 60, 100, 0.08);
   }
 
+  .pick-card-featured {
+    border-color: rgba(220, 160, 190, 0.22);
+    box-shadow:
+      inset 0 0 0 1px rgba(245, 184, 204, 0.06),
+      0 18px 54px rgba(160, 60, 100, 0.1);
+  }
+
   .pick-cover {
     position: relative;
     aspect-ratio: 16 / 9;
@@ -276,6 +307,22 @@ const iconMap: Record<string, string> = {
 
   .pick-card:hover .pick-cover img {
     transform: scale(1.03);
+  }
+
+  .pick-badge {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 1;
+    border: 1px solid rgba(245, 184, 204, 0.3);
+    background: rgba(10, 6, 8, 0.46);
+    backdrop-filter: blur(10px);
+    padding: 0.32rem 0.6rem;
+    color: var(--text-heading);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .pick-body {

@@ -15,6 +15,7 @@ export const zh = {
   'page.works': 'WORKS',
   'picks.title': '精选',
   'picks.description': '我喜欢的游戏、音乐和项目',
+  'picks.featured': '置顶',
   'page.friends': 'FRIENDS',
   'page.notfound': '404',
   'about.intro': '在这里，我想把技术、日常、审美和那些深夜里短暂却真实的想法，慢慢整理成可以回看的文字。',

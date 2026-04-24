@@ -44,14 +44,29 @@ describe('picks page integration', () => {
     expect(picks).toContain('"id": "games"');
     expect(picks).toContain('"id": "music"');
     expect(picks).toContain('"id": "projects"');
+    expect(picks).toContain('"featured"');
     expect(picks).toContain('"label"');
     expect(picks).toContain('"cover"');
     expect(picks).toContain('"tags"');
   });
 
+  it('only treats featured as active when the configured index exists', () => {
+    const page = read('pages/picks.astro');
+
+    expect(page).toContain('const hasFeaturedItem = featuredItem !== undefined;');
+    expect(page).toContain('itemIndex === 0 && hasFeaturedItem');
+    expect(page).toContain('itemIndex === 0 && hasFeaturedItem ?');
+  });
+
   it('renders picks sections, smooth filter links, and card styling hooks', () => {
     const page = read('pages/picks.astro');
 
+    expect(page).toContain('const featuredItem = category.items[category.featured];');
+    expect(page).toContain('const orderedItems = featuredItem');
+    expect(page).toContain('class:list={{');
+    expect(page).toContain("'pick-card-featured'");
+    expect(page).toContain('itemIndex === 0 && hasFeaturedItem');
+    expect(page).toContain('data-i18n="picks.featured"');
     expect(page).toContain('titleKey="picks.title"');
     expect(page).toContain('seoTitleKey="picks.title"');
     expect(page).toContain('seoDescriptionKey="picks.description"');
@@ -63,5 +78,7 @@ describe('picks page integration', () => {
     expect(page).toContain('-webkit-line-clamp: 2;');
     expect(page).toContain('target="_blank"');
     expect(page).toContain('box-shadow: 0 20px 60px rgba(160, 60, 100, 0.08);');
+    expect(page).toContain('.pick-badge');
+    expect(page).toContain('.pick-card-featured');
   });
 });

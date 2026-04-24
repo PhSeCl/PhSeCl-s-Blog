@@ -15,6 +15,7 @@ export const ja = {
   'page.works': '作品',
   'picks.title': 'おすすめ',
   'picks.description': '好きなゲーム、音楽、プロジェクト',
+  'picks.featured': '注目',
   'page.friends': 'リンク',
   'page.notfound': '404',
   'about.intro': 'ここでは、技術のことも日常のことも、夜に静かに浮かぶ考えも、あとから読み返せる形で残していきたいと思っています。',

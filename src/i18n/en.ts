@@ -15,6 +15,7 @@ export const en = {
   'page.works': 'WORKS',
   'picks.title': 'Picks',
   'picks.description': 'Games, music and projects I love',
+  'picks.featured': 'Pinned',
   'page.friends': 'FRIENDS',
   'page.notfound': '404',
   'about.intro': 'This is where I gather technical notes, fragments of daily life, and the thoughts that tend to appear late at night.',
