@@ -48,6 +48,22 @@ describe('picks page integration', () => {
     expect(picks).toContain('"label"');
     expect(picks).toContain('"cover"');
     expect(picks).toContain('"tags"');
+    expect(picks).not.toContain('"cover": "public/');
+    expect(picks).not.toContain('"/images/picks/');
+  });
+
+  it('supports structured multi-language item titles with explicit display order', () => {
+    const picks = read('data/picks.json');
+    const page = read('pages/picks.astro');
+
+    expect(picks).toContain('"title": {');
+    expect(picks).toContain('"display"');
+    expect(page).toContain('interface PickItemTitle');
+    expect(page).toContain("type PickTitleLang = 'zh' | 'ja' | 'en';");
+    expect(page).toContain('function resolvePickTitle');
+    expect(page).toContain('typeof title === \'string\'');
+    expect(page).toContain('const normalizedDisplay =');
+    expect(page).toContain("normalizedDisplay.includes('zh')");
   });
 
   it('only treats featured as active when the configured index exists', () => {
@@ -67,6 +83,9 @@ describe('picks page integration', () => {
     expect(page).toContain("'pick-card-featured'");
     expect(page).toContain('itemIndex === 0 && hasFeaturedItem');
     expect(page).toContain('data-i18n="picks.featured"');
+    expect(page).toContain('resolvePickTitle(item.title)');
+    expect(page).toContain('class="pick-title-main"');
+    expect(page).toContain('class="pick-title-alt"');
     expect(page).toContain('titleKey="picks.title"');
     expect(page).toContain('seoTitleKey="picks.title"');
     expect(page).toContain('seoDescriptionKey="picks.description"');
@@ -80,5 +99,13 @@ describe('picks page integration', () => {
     expect(page).toContain('box-shadow: 0 20px 60px rgba(160, 60, 100, 0.08);');
     expect(page).toContain('.pick-badge');
     expect(page).toContain('.pick-card-featured');
+  });
+
+  it('skips the image request entirely when a pick cover is missing', () => {
+    const page = read('pages/picks.astro');
+
+    expect(page).toContain('cover: string | null;');
+    expect(page).toContain('{item.cover && (');
+    expect(page).toContain('src={item.cover}');
   });
 });

@@ -7,23 +7,35 @@
       "featured": 0,
       "items": [
         {
-          "title": "NieR:Automata",
-          "description": "关于人类、机械与存在意义的故事",
-          "cover": "/images/picks/nier.webp",
-          "url": "https://store.steampowered.com/app/524220",
-          "tags": ["ARPG", "剧情", "开放世界"]
+          "title": {
+            "zh": "近月少女的礼仪",
+            "ja": "月に寄りそう乙女の作法",
+            "display": ["zh", "ja"]
+          },
+          "description": "不玩露娜线的人生是不完整的",
+          "cover": "/media/picks/tsukiniyorusou.avif",
+          "url": "https://store.steampowered.com/app/1776970/_/",
+          "tags": ["Galgame", "废萌", "伪娘"]
         },
         {
-          "title": "Outer Wilds",
-          "description": "在宇宙循环里一点点拼回真相的浪漫冒险",
-          "cover": "/images/picks/outer-wilds.webp",
-          "url": "https://store.steampowered.com/app/753640",
-          "tags": ["探索", "解谜", "科幻"]
+          "title": {
+            "zh": "少女理论及周边-École de Paris",
+            "ja": "乙女理論とその周辺-École de Paris",
+            "display": ["zh", "ja"]
+          },
+          "description": "又屑又兄控的妹妹实在太可爱了",
+          "cover": "/media/picks/otomeriron.avif",
+          "url": "https://store.steampowered.com/app/2567190/_cole_de_Paris/",
+          "tags": ["Galgame", "废萌", "妹妹"]
         },
         {
-          "title": "VA-11 Hall-A",
+          "title": {
+            "zh": "瓦尔哈拉",
+            "en": "VA-11 Hall-A",
+            "display": ["zh", "en"]
+          },
           "description": "一边调酒一边听赛博城市里的故事碎片",
-          "cover": "/images/picks/va11halla.webp",
+          "cover": null,
           "url": "https://store.steampowered.com/app/447530",
           "tags": ["视觉小说", "赛博朋克", "叙事"]
         }
@@ -36,23 +48,33 @@
       "featured": 1,
       "items": [
         {
-          "title": "Yorushika - 花に亡霊",
+          "title": {
+            "ja": "ヨルシカ - 花に亡霊",
+            "display": ["ja"]
+          },
           "description": "夏天与回忆的交织",
-          "cover": "/images/picks/yorushika.webp",
+          "cover": null,
           "url": "https://www.youtube.com/watch?v=9lVPAWLWtWc",
           "tags": ["J-Pop", "Yorushika"]
         },
         {
-          "title": "RADWIMPS - Sparkle",
+          "title": {
+            "zh": "RADWIMPS - 前前前世",
+            "ja": "RADWIMPS - スパークル",
+            "display": ["zh", "ja"]
+          },
           "description": "情绪和光线一起铺开的电影感旋律",
-          "cover": "/images/picks/sparkle.webp",
+          "cover": null,
           "url": "https://www.youtube.com/watch?v=a2GujJZfXpg",
           "tags": ["Anime", "Rock", "OST"]
         },
         {
-          "title": "米津玄師 - Lemon",
+          "title": {
+            "zh": "米津玄师 - Lemon",
+            "display": ["zh"]
+          },
           "description": "克制却很有余韵的一首歌，适合夜里循环",
-          "cover": "/images/picks/lemon.webp",
+          "cover": null,
           "url": "https://www.youtube.com/watch?v=SX_ViT4Ra7k",
           "tags": ["J-Pop", "Ballad", "夜晚"]
         }
@@ -65,23 +87,30 @@
       "featured": 2,
       "items": [
         {
-          "title": "Astro",
+          "title": {
+            "en": "Astro",
+            "display": ["en"]
+          },
           "description": "内容驱动的静态站点生成框架",
-          "cover": "/images/picks/astro.webp",
+          "cover": null,
           "url": "https://astro.build",
           "tags": ["Framework", "SSG"]
         },
         {
-          "title": "Vitest",
+          "title": {
+            "zh": "Vitest",
+            "en": "Vitest",
+            "display": ["zh", "en"]
+          },
           "description": "轻快直接的前端测试工具，很适合现在这类项目",
-          "cover": "/images/picks/vitest.webp",
+          "cover": null,
           "url": "https://vitest.dev",
           "tags": ["Testing", "DX", "Tooling"]
         },
         {
           "title": "Cloudflare Workers",
           "description": "把边缘部署、函数和站点能力揉在一起的好用平台",
-          "cover": "/images/picks/workers.webp",
+          "cover": null,
           "url": "https://workers.cloudflare.com",
           "tags": ["Edge", "Serverless", "Platform"]
         }

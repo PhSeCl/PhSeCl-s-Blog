@@ -3,10 +3,19 @@ import picks from '../data/picks.json';
 import PageLayout from '../layouts/PageLayout.astro';
 import type { Lang } from '../i18n/ui';
 
+type PickTitleLang = 'zh' | 'ja' | 'en';
+
+interface PickItemTitle {
+  zh?: string;
+  ja?: string;
+  en?: string;
+  display?: PickTitleLang[];
+}
+
 interface PickItem {
-  title: string;
+  title: string | PickItemTitle;
   description: string;
-  cover: string;
+  cover: string | null;
   url: string;
   tags: string[];
 }
@@ -26,6 +35,25 @@ const iconMap: Record<string, string> = {
   music: 'MUSIC',
   code: 'CODE',
 };
+
+function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: string } {
+  if (typeof title === 'string') {
+    return { main: title };
+  }
+
+  const normalizedDisplay =
+    title.display?.filter((lang, index, array) => array.indexOf(lang) === index && title[lang]) ?? [];
+
+  const orderedDisplay = normalizedDisplay.includes('zh')
+    ? ['zh', ...normalizedDisplay.filter((lang) => lang !== 'zh')]
+    : normalizedDisplay;
+
+  const [mainLang, altLang] = orderedDisplay;
+  const main = (mainLang && title[mainLang]) || title.zh || title.ja || title.en || '';
+  const alt = altLang && title[altLang] && title[altLang] !== main ? title[altLang] : undefined;
+
+  return { main, alt };
+}
 ---
 
 <PageLayout
@@ -85,44 +113,53 @@ const iconMap: Record<string, string> = {
 
               <div class="picks-grid">
                 {
-                  orderedItems.map((item, itemIndex) => (
-                    <a
-                      class:list={{
-                        'pick-card': true,
-                        'pick-card-featured': itemIndex === 0 && hasFeaturedItem,
-                      }}
-                      href={item.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <div class="pick-cover" data-error="false">
-                        <div class="pick-cover-fallback" aria-hidden="true"></div>
-                        <img
-                          src={item.cover}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                          onerror="this.closest('.pick-cover')?.setAttribute('data-error', 'true')"
-                        />
-                        {
-                          itemIndex === 0 && hasFeaturedItem ? (
-                            <span class="pick-badge" data-i18n="picks.featured">置顶</span>
-                          ) : null
-                        }
-                      </div>
+                  orderedItems.map((item, itemIndex) => {
+                    const resolvedTitle = resolvePickTitle(item.title);
 
-                      <div class="pick-body">
-                        <h3>{item.title}</h3>
-                        <p>{item.description}</p>
-
-                        <div class="tag-row">
-                          {item.tags.map((tag) => (
-                            <span class="tag">{tag}</span>
-                          ))}
+                    return (
+                      <a
+                        class:list={{
+                          'pick-card': true,
+                          'pick-card-featured': itemIndex === 0 && hasFeaturedItem,
+                        }}
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <div class="pick-cover" data-error="false">
+                          <div class="pick-cover-fallback" aria-hidden="true"></div>
+                          {item.cover && (
+                            <img
+                              src={item.cover}
+                              alt=""
+                              loading="lazy"
+                              decoding="async"
+                              onerror="this.closest('.pick-cover')?.setAttribute('data-error', 'true')"
+                            />
+                          )}
+                          {
+                            itemIndex === 0 && hasFeaturedItem ? (
+                              <span class="pick-badge" data-i18n="picks.featured">置顶</span>
+                            ) : null
+                          }
                         </div>
-                      </div>
-                    </a>
-                  ))
+
+                        <div class="pick-body">
+                          <h3>
+                            <span class="pick-title-main">{resolvedTitle.main}</span>
+                            {resolvedTitle.alt && <span class="pick-title-alt">{resolvedTitle.alt}</span>}
+                          </h3>
+                          <p>{item.description}</p>
+
+                          <div class="tag-row">
+                            {item.tags.map((tag) => (
+                              <span class="tag">{tag}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </a>
+                    );
+                  })
                 }
               </div>
             </section>
@@ -339,6 +376,19 @@ const iconMap: Record<string, string> = {
     font-size: 1.08rem;
     font-weight: 400;
     line-height: 1.55;
+  }
+
+  .pick-title-main,
+  .pick-title-alt {
+    display: block;
+  }
+
+  .pick-title-alt {
+    margin-top: 0.2rem;
+    color: var(--text-soft);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
   }
 
   .pick-body p {
