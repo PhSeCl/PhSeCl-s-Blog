@@ -1,0 +1,350 @@
+---
+import picks from '../data/picks.json';
+import PageLayout from '../layouts/PageLayout.astro';
+import type { Lang } from '../i18n/ui';
+
+interface PickItem {
+  title: string;
+  description: string;
+  cover: string;
+  url: string;
+  tags: string[];
+}
+
+interface PickCategory {
+  id: string;
+  label: Record<Lang, string>;
+  icon: string;
+  items: PickItem[];
+}
+
+const categories = picks.categories as PickCategory[];
+
+const iconMap: Record<string, string> = {
+  gamepad: 'GAME',
+  music: 'MUSIC',
+  code: 'CODE',
+};
+---
+
+<PageLayout
+  title="精选"
+  description="我喜欢的游戏、音乐和项目"
+  titleKey="picks.title"
+  titleFallback="精选"
+  seoTitleKey="picks.title"
+  seoDescriptionKey="picks.description"
+  seoTitleFallback="精选"
+  seoDescriptionFallback="我喜欢的游戏、音乐和项目"
+>
+  <p class="page-intro" data-i18n="picks.description">
+    我喜欢的游戏、音乐和项目
+  </p>
+
+  <nav class="picks-filter" aria-label="Picks categories">
+    {
+      categories.map((category) => (
+        <a
+          href={`#${category.id}`}
+          class="picks-filter-link"
+          data-label-zh={category.label.zh}
+          data-label-ja={category.label.ja}
+          data-label-en={category.label.en}
+        >
+          {category.label.zh}
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="picks-sections">
+    {
+      categories.map((category) => (
+        <section class="pick-section" id={category.id}>
+          <div class="section-header">
+            <h2
+              data-picks-label
+              data-label-zh={category.label.zh}
+              data-label-ja={category.label.ja}
+              data-label-en={category.label.en}
+            >
+              {category.label.zh}
+            </h2>
+            <span class="section-icon" aria-hidden="true">{iconMap[category.icon] ?? category.icon}</span>
+            <div class="line"></div>
+          </div>
+
+          <div class="picks-grid">
+            {
+              category.items.map((item) => (
+                <a class="pick-card" href={item.url} target="_blank" rel="noreferrer">
+                  <div class="pick-cover" data-error="false">
+                    <div class="pick-cover-fallback" aria-hidden="true"></div>
+                    <img
+                      src={item.cover}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      onerror="this.closest('.pick-cover')?.setAttribute('data-error', 'true')"
+                    />
+                  </div>
+
+                  <div class="pick-body">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+
+                    <div class="tag-row">
+                      {item.tags.map((tag) => (
+                        <span class="tag">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              ))
+            }
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</PageLayout>
+
+<script>
+  import { getLang } from '../utils/i18n';
+  import type { Lang } from '../i18n/ui';
+
+  function applyPicksLabels(lang: Lang) {
+    const nodes = document.querySelectorAll<HTMLElement>('[data-label-zh][data-label-ja][data-label-en]');
+
+    nodes.forEach((node) => {
+      const nextLabel =
+        (lang === 'ja' ? node.dataset.labelJa : lang === 'en' ? node.dataset.labelEn : node.dataset.labelZh) ??
+        node.dataset.labelZh;
+
+      if (nextLabel) {
+        node.textContent = nextLabel;
+      }
+    });
+  }
+
+  function initPicksPage() {
+    applyPicksLabels(getLang());
+  }
+
+  document.addEventListener('astro:page-load', initPicksPage);
+  document.addEventListener('astro:after-swap', initPicksPage);
+  window.addEventListener('lang-change', (event: Event) => {
+    const detail = (event as CustomEvent<{ lang?: Lang }>).detail;
+    applyPicksLabels(detail?.lang ?? getLang());
+  });
+  initPicksPage();
+</script>
+
+<style>
+  .page-intro {
+    margin: 0 0 1.8rem;
+    color: var(--text-soft);
+    line-height: 1.9;
+  }
+
+  .picks-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-bottom: 2.6rem;
+  }
+
+  .picks-filter-link {
+    border: 1px solid rgba(160, 60, 100, 0.2);
+    border-radius: 999px;
+    padding: 0.45rem 0.95rem;
+    color: var(--text-soft);
+    text-decoration: none;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease,
+      background 0.3s ease;
+  }
+
+  .picks-filter-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(220, 160, 190, 0.28);
+    background: rgba(220, 160, 190, 0.08);
+    color: var(--text-heading);
+  }
+
+  .picks-sections {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .pick-section {
+    scroll-margin-top: 6.5rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .section-header h2 {
+    margin: 0;
+    color: var(--text-heading);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+
+  .section-icon {
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+  }
+
+  .section-header .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(220, 160, 190, 0.22), transparent);
+  }
+
+  .picks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.6rem;
+  }
+
+  .pick-card {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(220, 160, 190, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    text-decoration: none;
+    transition:
+      transform 0.45s ease,
+      border-color 0.45s ease,
+      background 0.45s ease,
+      box-shadow 0.45s ease;
+  }
+
+  .pick-card:hover {
+    background: rgba(220, 160, 190, 0.045);
+    border-color: rgba(220, 160, 190, 0.18);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(160, 60, 100, 0.08);
+  }
+
+  .pick-cover {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .pick-cover-fallback,
+  .pick-cover img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pick-cover-fallback {
+    background:
+      radial-gradient(circle at 22% 20%, rgba(255, 214, 230, 0.28), transparent 24%),
+      radial-gradient(circle at 78% 24%, rgba(245, 184, 204, 0.2), transparent 26%),
+      linear-gradient(135deg, rgba(212, 120, 154, 0.22), rgba(122, 46, 74, 0.48));
+  }
+
+  .pick-cover img {
+    object-fit: cover;
+    transition: transform 0.45s ease, opacity 0.3s ease;
+  }
+
+  .pick-cover[data-error='true'] img {
+    opacity: 0;
+  }
+
+  .pick-card:hover .pick-cover img {
+    transform: scale(1.03);
+  }
+
+  .pick-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 1.35rem;
+  }
+
+  .pick-body h3 {
+    margin: 0 0 0.65rem;
+    color: var(--text-heading);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: 1.08rem;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  .pick-body p {
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-soft);
+    line-height: 1.8;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: auto;
+    padding-top: 1rem;
+  }
+
+  .tag {
+    display: inline-block;
+    border: 1px solid rgba(160, 60, 100, 0.2);
+    border-radius: 2px;
+    padding: 0.2em 0.8em;
+    color: var(--sakura-400);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    opacity: 0.72;
+  }
+
+  @media (max-width: 767px) {
+    .picks-filter {
+      margin-bottom: 2rem;
+    }
+
+    .pick-section {
+      scroll-margin-top: 5.5rem;
+    }
+
+    .section-header {
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .section-header h2 {
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .section-icon {
+      display: none;
+    }
+  }
+</style>

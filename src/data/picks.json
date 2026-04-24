@@ -1,0 +1,88 @@
+{
+  "categories": [
+    {
+      "id": "games",
+      "label": { "zh": "游戏", "ja": "ゲーム", "en": "Games" },
+      "icon": "gamepad",
+      "items": [
+        {
+          "title": "NieR:Automata",
+          "description": "关于人类、机械与存在意义的故事",
+          "cover": "/images/picks/nier.webp",
+          "url": "https://store.steampowered.com/app/524220",
+          "tags": ["ARPG", "剧情", "开放世界"]
+        },
+        {
+          "title": "Outer Wilds",
+          "description": "在宇宙循环里一点点拼回真相的浪漫冒险",
+          "cover": "/images/picks/outer-wilds.webp",
+          "url": "https://store.steampowered.com/app/753640",
+          "tags": ["探索", "解谜", "科幻"]
+        },
+        {
+          "title": "VA-11 Hall-A",
+          "description": "一边调酒一边听赛博城市里的故事碎片",
+          "cover": "/images/picks/va11halla.webp",
+          "url": "https://store.steampowered.com/app/447530",
+          "tags": ["视觉小说", "赛博朋克", "叙事"]
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "label": { "zh": "音乐", "ja": "音楽", "en": "Music" },
+      "icon": "music",
+      "items": [
+        {
+          "title": "Yorushika - 花に亡霊",
+          "description": "夏天与回忆的交织",
+          "cover": "/images/picks/yorushika.webp",
+          "url": "https://www.youtube.com/watch?v=9lVPAWLWtWc",
+          "tags": ["J-Pop", "Yorushika"]
+        },
+        {
+          "title": "RADWIMPS - Sparkle",
+          "description": "情绪和光线一起铺开的电影感旋律",
+          "cover": "/images/picks/sparkle.webp",
+          "url": "https://www.youtube.com/watch?v=a2GujJZfXpg",
+          "tags": ["Anime", "Rock", "OST"]
+        },
+        {
+          "title": "米津玄師 - Lemon",
+          "description": "克制却很有余韵的一首歌，适合夜里循环",
+          "cover": "/images/picks/lemon.webp",
+          "url": "https://www.youtube.com/watch?v=SX_ViT4Ra7k",
+          "tags": ["J-Pop", "Ballad", "夜晚"]
+        }
+      ]
+    },
+    {
+      "id": "projects",
+      "label": { "zh": "项目", "ja": "プロジェクト", "en": "Projects" },
+      "icon": "code",
+      "items": [
+        {
+          "title": "Astro",
+          "description": "内容驱动的静态站点生成框架",
+          "cover": "/images/picks/astro.webp",
+          "url": "https://astro.build",
+          "tags": ["Framework", "SSG"]
+        },
+        {
+          "title": "Vitest",
+          "description": "轻快直接的前端测试工具，很适合现在这类项目",
+          "cover": "/images/picks/vitest.webp",
+          "url": "https://vitest.dev",
+          "tags": ["Testing", "DX", "Tooling"]
+        },
+        {
+          "title": "Cloudflare Workers",
+          "description": "把边缘部署、函数和站点能力揉在一起的好用平台",
+          "cover": "/images/picks/workers.webp",
+          "url": "https://workers.cloudflare.com",
+          "tags": ["Edge", "Serverless", "Platform"]
+        }
+      ]
+    }
+  ]
+}
