@@ -14,6 +14,7 @@ interface PickItemTitle {
 
 interface PickItem {
   title: string | PickItemTitle;
+  artist?: string;
   description: string;
   cover: string | null;
   url: string;
@@ -34,6 +35,30 @@ const iconMap: Record<string, string> = {
   gamepad: 'GAME',
   music: 'MUSIC',
   code: 'CODE',
+};
+
+const emptyState = {
+  zh: '这里暂时什么也没有',
+  ja: 'ここにはまだ何もありません',
+  en: 'There is nothing here for now',
+};
+
+const actionLabels = {
+  open: {
+    zh: '打开链接',
+    ja: 'リンクを開く',
+    en: 'Open link',
+  },
+  expand: {
+    zh: '展开简介',
+    ja: '説明を開く',
+    en: 'Expand',
+  },
+  collapse: {
+    zh: '收起简介',
+    ja: '説明を閉じる',
+    en: 'Collapse',
+  },
 };
 
 function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: string } {
@@ -92,6 +117,7 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
         (() => {
           const featuredItem = category.items[category.featured];
           const hasFeaturedItem = featuredItem !== undefined;
+          const hasItems = category.items.length > 0;
           const orderedItems = featuredItem
             ? [featuredItem, ...category.items.filter((item) => item !== featuredItem)]
             : category.items;
@@ -111,57 +137,104 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
                 <div class="line"></div>
               </div>
 
-              <div class="picks-grid">
-                {
-                  orderedItems.map((item, itemIndex) => {
-                    const resolvedTitle = resolvePickTitle(item.title);
+              {
+                hasItems ? (
+                  <div class="picks-grid">
+                    {
+                      orderedItems.map((item, itemIndex) => {
+                        const resolvedTitle = resolvePickTitle(item.title);
 
-                    return (
-                      <a
-                        class:list={{
-                          'pick-card': true,
-                          'pick-card-featured': itemIndex === 0 && hasFeaturedItem,
-                        }}
-                        href={item.url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <div class="pick-cover" data-error="false">
-                          <div class="pick-cover-fallback" aria-hidden="true"></div>
-                          {item.cover && (
-                            <img
-                              src={item.cover}
-                              alt=""
-                              loading="lazy"
-                              decoding="async"
-                              onerror="this.closest('.pick-cover')?.setAttribute('data-error', 'true')"
-                            />
-                          )}
-                          {
-                            itemIndex === 0 && hasFeaturedItem ? (
-                              <span class="pick-badge" data-i18n="picks.featured">置顶</span>
-                            ) : null
-                          }
-                        </div>
+                        return (
+                          <article
+                            class:list={{
+                              'pick-card': true,
+                              'pick-card-featured': itemIndex === 0 && hasFeaturedItem,
+                            }}
+                            data-expanded="false"
+                            data-url={item.url}
+                            tabindex="0"
+                            role="link"
+                            aria-label={resolvedTitle.main}
+                          >
+                            <div class="pick-cover" data-error="false">
+                              <div class="pick-cover-fallback" aria-hidden="true"></div>
+                              {item.cover && (
+                                <img
+                                  src={item.cover}
+                                  alt=""
+                                  loading="lazy"
+                                  decoding="async"
+                                  onerror="this.closest('.pick-cover')?.setAttribute('data-error', 'true')"
+                                />
+                              )}
+                              {
+                                itemIndex === 0 && hasFeaturedItem ? (
+                                  <span class="pick-badge" data-i18n="picks.featured">置顶</span>
+                                ) : null
+                              }
+                            </div>
 
-                        <div class="pick-body">
-                          <h3>
-                            <span class="pick-title-main">{resolvedTitle.main}</span>
-                            {resolvedTitle.alt && <span class="pick-title-alt">{resolvedTitle.alt}</span>}
-                          </h3>
-                          <p>{item.description}</p>
+                            <div class="pick-body">
+                              <h3>
+                                <span class="pick-title-main">{resolvedTitle.main}</span>
+                                {resolvedTitle.alt && <span class="pick-title-alt">{resolvedTitle.alt}</span>}
+                              </h3>
+                              {item.artist && <p class="pick-artist">{item.artist}</p>}
+                              <p class="pick-description">{item.description}</p>
 
-                          <div class="tag-row">
-                            {item.tags.map((tag) => (
-                              <span class="tag">{tag}</span>
-                            ))}
-                          </div>
-                        </div>
-                      </a>
-                    );
-                  })
-                }
-              </div>
+                              <div class="pick-footer">
+                                <div class="tag-row">
+                                  {item.tags.map((tag) => (
+                                    <span class="tag">{tag}</span>
+                                  ))}
+                                </div>
+
+                                <div class="pick-actions">
+                                  <button
+                                    type="button"
+                                    class="pick-expand-toggle"
+                                    aria-expanded="false"
+                                    data-pick-toggle
+                                    data-expand-zh={actionLabels.expand.zh}
+                                    data-expand-ja={actionLabels.expand.ja}
+                                    data-expand-en={actionLabels.expand.en}
+                                    data-collapse-zh={actionLabels.collapse.zh}
+                                    data-collapse-ja={actionLabels.collapse.ja}
+                                    data-collapse-en={actionLabels.collapse.en}
+                                  >
+                                    {actionLabels.expand.zh}
+                                  </button>
+                                  <a
+                                    class="pick-open-link"
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    data-label-zh={actionLabels.open.zh}
+                                    data-label-ja={actionLabels.open.ja}
+                                    data-label-en={actionLabels.open.en}
+                                  >
+                                    {actionLabels.open.zh}
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })
+                    }
+                  </div>
+                ) : (
+                  <div
+                    class="pick-empty"
+                    aria-live="polite"
+                    data-label-zh={emptyState.zh}
+                    data-label-ja={emptyState.ja}
+                    data-label-en={emptyState.en}
+                  >
+                    {emptyState.zh}
+                  </div>
+                )
+              }
             </section>
           );
         })()
@@ -174,8 +247,22 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
   import { getLang } from '../utils/i18n';
   import type { Lang } from '../i18n/ui';
 
+  function resolveButtonLabel(button: HTMLButtonElement, lang: Lang) {
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    const prefix = isExpanded ? 'collapse' : 'expand';
+
+    return (
+      (lang === 'ja'
+        ? button.dataset[`${prefix}Ja`]
+        : lang === 'en'
+          ? button.dataset[`${prefix}En`]
+          : button.dataset[`${prefix}Zh`]) ?? button.dataset[`${prefix}Zh`]
+    );
+  }
+
   function applyPicksLabels(lang: Lang) {
     const nodes = document.querySelectorAll<HTMLElement>('[data-label-zh][data-label-ja][data-label-en]');
+    const toggleButtons = document.querySelectorAll<HTMLButtonElement>('[data-pick-toggle]');
 
     nodes.forEach((node) => {
       const nextLabel =
@@ -186,9 +273,97 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
         node.textContent = nextLabel;
       }
     });
+
+    toggleButtons.forEach((button) => {
+      const nextLabel = resolveButtonLabel(button, lang);
+
+      if (nextLabel) {
+        button.textContent = nextLabel;
+      }
+    });
+  }
+
+  function bindPickDescriptionToggles() {
+    const toggleButtons = document.querySelectorAll<HTMLButtonElement>('[data-pick-toggle]');
+    const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
+
+    toggleButtons.forEach((button) => {
+      if (button.dataset.bound === 'true') {
+        return;
+      }
+
+      button.dataset.bound = 'true';
+      button.addEventListener('click', () => {
+        if (!isMobileViewport) {
+          return;
+        }
+
+        const card = button.closest<HTMLElement>('.pick-card');
+
+        if (!card) {
+          return;
+        }
+
+        const nextExpanded = card.dataset.expanded !== 'true';
+        card.dataset.expanded = nextExpanded ? 'true' : 'false';
+        button.setAttribute('aria-expanded', nextExpanded ? 'true' : 'false');
+        applyPicksLabels(getLang());
+      });
+    });
+  }
+
+  function bindPickCardLinks() {
+    const cards = document.querySelectorAll<HTMLElement>('.pick-card[data-url]');
+
+    cards.forEach((card) => {
+      if (card.dataset.linkBound === 'true') {
+        return;
+      }
+
+      card.dataset.linkBound = 'true';
+
+      const openCardLink = () => {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          return;
+        }
+
+        const url = card.dataset.url;
+
+        if (url) {
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }
+      };
+
+      card.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement | null;
+
+        if (target?.closest('.pick-actions')) {
+          return;
+        }
+
+        openCardLink();
+      });
+
+      card.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
+
+        const target = event.target as HTMLElement | null;
+
+        if (target?.closest('.pick-actions')) {
+          return;
+        }
+
+        event.preventDefault();
+        openCardLink();
+      });
+    });
   }
 
   function initPicksPage() {
+    bindPickDescriptionToggles();
+    bindPickCardLinks();
     applyPicksLabels(getLang());
   }
 
@@ -283,6 +458,7 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
   }
 
   .pick-card {
+    position: relative;
     display: flex;
     height: 100%;
     flex-direction: column;
@@ -309,6 +485,14 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
     box-shadow:
       inset 0 0 0 1px rgba(245, 184, 204, 0.06),
       0 18px 54px rgba(160, 60, 100, 0.1);
+  }
+
+  .pick-footer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.9rem;
   }
 
   .pick-cover {
@@ -401,12 +585,37 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
     -webkit-line-clamp: 2;
   }
 
+  .pick-artist {
+    margin: 0;
+    margin-bottom: 0.7rem;
+    overflow: hidden;
+    color: var(--text-soft);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+    opacity: 0.9;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .pick-description {
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-soft);
+    line-height: 1.8;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    transition: -webkit-line-clamp 0.3s ease;
+  }
+
   .tag-row {
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem;
-    margin-top: auto;
-    padding-top: 1rem;
+    padding-top: 0.2rem;
   }
 
   .tag {
@@ -419,6 +628,64 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
     font-size: 0.65rem;
     letter-spacing: 0.15em;
     opacity: 0.72;
+  }
+
+  .pick-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .pick-open-link,
+  .pick-expand-toggle {
+    border: 1px solid rgba(220, 160, 190, 0.18);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.42rem 0.78rem;
+    color: var(--text-soft);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    transition:
+      border-color 0.3s ease,
+      background 0.3s ease,
+      color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .pick-open-link:hover,
+  .pick-expand-toggle:hover {
+    border-color: rgba(220, 160, 190, 0.32);
+    background: rgba(220, 160, 190, 0.08);
+    color: var(--text-heading);
+    transform: translateY(-1px);
+  }
+
+  .pick-expand-toggle {
+    cursor: pointer;
+    display: none;
+  }
+
+  .pick-open-link {
+    display: none;
+  }
+
+  .pick-empty {
+    border: 1px solid rgba(220, 160, 190, 0.12);
+    background:
+      radial-gradient(circle at top left, rgba(255, 214, 230, 0.14), transparent 34%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(212, 120, 154, 0.06));
+    padding: 1.5rem 1.4rem;
+    color: var(--text-soft);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.9;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pick-card:hover .pick-description {
+      -webkit-line-clamp: 6;
+    }
   }
 
   @media (max-width: 767px) {
@@ -442,6 +709,25 @@ function resolvePickTitle(title: string | PickItemTitle): { main: string; alt?: 
 
     .section-icon {
       display: none;
+    }
+
+    .pick-description {
+      -webkit-line-clamp: 2;
+    }
+
+    .pick-card[data-expanded='true'] .pick-description {
+      -webkit-line-clamp: 8;
+    }
+
+    .pick-actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .pick-open-link,
+    .pick-expand-toggle {
+      display: block;
+      text-align: center;
     }
   }
 </style>

@@ -30,14 +30,46 @@
         },
         {
           "title": {
-            "zh": "瓦尔哈拉",
-            "en": "VA-11 Hall-A",
-            "display": ["zh", "en"]
+            "zh": "秽翼的尤斯蒂娅",
+            "ja": "穢翼のユースティア",
+            "display": ["zh", "ja"]
           },
-          "description": "一边调酒一边听赛博城市里的故事碎片",
-          "cover": null,
-          "url": "https://store.steampowered.com/app/447530",
-          "tags": ["视觉小说", "赛博朋克", "叙事"]
+          "description": "就这样，守护、治愈、信仰、俯瞰，并记录下这个被拯救的世界吧。",
+          "cover": "/media/picks/eustia.avif",
+          "url": "https://august-soft.com/eustia/",
+          "tags": ["Galgame", "剧情", "奇幻", "催泪"]
+        },
+        {
+          "title": {
+            "zh": "9-Nine 系列",
+            "display": ["zh"]
+          },
+          "description": "新海天满分，华哥活泼的声线和充满乐子的兄妹相声实在太棒了",
+          "cover": "/media/picks/9nine.avif",
+          "url": "https://9-nine-project.com/",
+          "tags": ["Galgame", "剧情", "战斗", "妹妹"]
+        },
+        {
+          "title": {
+            "zh": "纸上的魔法使",
+            "ja": "紙の上の魔法使い",
+            "display": ["zh", "ja"]
+          },
+          "description": "妃线满分，真正的happy end，男主理智而果断。忽略夜子到处乱哈的话都挺好的",
+          "cover": "/media/picks/gamino.avif",
+          "url": "https://store.steampowered.com/app/3771230/_/",
+          "tags": ["Galgame", "剧情", "奇幻", "催泪", "妹妹"]
+        },
+        {
+          "title": {
+            "zh": "想要传达给你的爱恋",
+            "ja": "恋×シンアイ彼女",
+            "display": ["zh", "ja"]
+          },
+          "description": "你不要奏啊😭😭😭别奏好不好😭😭😭坏女人😭😭😭",
+          "cover": "/media/picks/koikakeru.avif",
+          "url": "https://store.steampowered.com/app/2242710/_/",
+          "tags": ["Galgame", "剧情", "恋爱", "新岛夕"]
         }
       ]
     },
@@ -45,38 +77,31 @@
       "id": "music",
       "label": { "zh": "音乐", "ja": "音楽", "en": "Music" },
       "icon": "music",
-      "featured": 1,
+      "featured": 2,
       "items": [
         {
-          "title": {
-            "ja": "ヨルシカ - 花に亡霊",
-            "display": ["ja"]
-          },
-          "description": "夏天与回忆的交织",
-          "cover": null,
-          "url": "https://www.youtube.com/watch?v=9lVPAWLWtWc",
+          "title": "都落ち",
+          "artist": "ヨルシカ",
+          "description": "轻快的节奏和丰富的变化",
+          "cover": "/media/picks/miyakoochi.avif",
+          "url": "https://music.163.com/#/song?id=2036445126",
           "tags": ["J-Pop", "Yorushika"]
         },
         {
-          "title": {
-            "zh": "RADWIMPS - 前前前世",
-            "ja": "RADWIMPS - スパークル",
-            "display": ["zh", "ja"]
-          },
-          "description": "情绪和光线一起铺开的电影感旋律",
-          "cover": null,
-          "url": "https://www.youtube.com/watch?v=a2GujJZfXpg",
+          "title": "蝶に結いた赤い糸",
+          "artist": "トゲナシトゲアリ",
+          "description": "存在感强的贝斯和抒情的唱法，mmk和nina真是，一个敢写，一个敢唱",
+          "cover": "/media/picks/chouni.avif",
+          "url": "https://music.163.com/#/song?id=2621539078",
           "tags": ["Anime", "Rock", "OST"]
         },
         {
-          "title": {
-            "zh": "米津玄师 - Lemon",
-            "display": ["zh"]
-          },
-          "description": "克制却很有余韵的一首歌，适合夜里循环",
-          "cover": null,
-          "url": "https://www.youtube.com/watch?v=SX_ViT4Ra7k",
-          "tags": ["J-Pop", "Ballad", "夜晚"]
+          "title": "秒針を噛む",
+          "artist": "ずっと真夜中でいいのに。",
+          "description": " 有力的贝斯和ACAね那种\"拼命\"的高音非常nice ",
+          "cover": "/media/picks/byoshin.avif",
+          "url": "https://music.163.com/#/song?id=1325357378",
+          "tags": ["J-Pop", "Rock", "夜晚"]
         }
       ]
     },
@@ -85,36 +110,7 @@
       "label": { "zh": "项目", "ja": "プロジェクト", "en": "Projects" },
       "icon": "code",
       "featured": 2,
-      "items": [
-        {
-          "title": {
-            "en": "Astro",
-            "display": ["en"]
-          },
-          "description": "内容驱动的静态站点生成框架",
-          "cover": null,
-          "url": "https://astro.build",
-          "tags": ["Framework", "SSG"]
-        },
-        {
-          "title": {
-            "zh": "Vitest",
-            "en": "Vitest",
-            "display": ["zh", "en"]
-          },
-          "description": "轻快直接的前端测试工具，很适合现在这类项目",
-          "cover": null,
-          "url": "https://vitest.dev",
-          "tags": ["Testing", "DX", "Tooling"]
-        },
-        {
-          "title": "Cloudflare Workers",
-          "description": "把边缘部署、函数和站点能力揉在一起的好用平台",
-          "cover": null,
-          "url": "https://workers.cloudflare.com",
-          "tags": ["Edge", "Serverless", "Platform"]
-        }
-      ]
+      "items": []
     }
   ]
 }

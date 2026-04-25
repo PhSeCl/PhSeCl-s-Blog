@@ -50,6 +50,8 @@ describe('picks page integration', () => {
     expect(picks).toContain('"tags"');
     expect(picks).not.toContain('"cover": "public/');
     expect(picks).not.toContain('"/images/picks/');
+    expect(picks).toContain('"id": "projects"');
+    expect(picks).toContain('"items": []');
   });
 
   it('supports structured multi-language item titles with explicit display order', () => {
@@ -64,6 +66,8 @@ describe('picks page integration', () => {
     expect(page).toContain('typeof title === \'string\'');
     expect(page).toContain('const normalizedDisplay =');
     expect(page).toContain("normalizedDisplay.includes('zh')");
+    expect(picks).toContain('"artist": "');
+    expect(page).toContain('artist?: string;');
   });
 
   it('only treats featured as active when the configured index exists', () => {
@@ -84,8 +88,18 @@ describe('picks page integration', () => {
     expect(page).toContain('itemIndex === 0 && hasFeaturedItem');
     expect(page).toContain('data-i18n="picks.featured"');
     expect(page).toContain('resolvePickTitle(item.title)');
+    expect(page).toContain('{item.artist && <p class="pick-artist">{item.artist}</p>}');
+    expect(page).toContain('class="pick-description"');
+    expect(page).toContain('data-pick-toggle');
+    expect(page).toContain('data-url={item.url}');
+    expect(page).toContain("role=\"link\"");
+    expect(page).toContain('bindPickCardLinks()');
+    expect(page).toContain('class="pick-open-link"');
+    expect(page).toContain('class="pick-expand-toggle"');
     expect(page).toContain('class="pick-title-main"');
     expect(page).toContain('class="pick-title-alt"');
+    expect(page).toContain('.pick-artist');
+    expect(page).toContain('-webkit-line-clamp: 2;');
     expect(page).toContain('titleKey="picks.title"');
     expect(page).toContain('seoTitleKey="picks.title"');
     expect(page).toContain('seoDescriptionKey="picks.description"');
@@ -94,11 +108,21 @@ describe('picks page integration', () => {
     expect(page).toContain('scroll-margin-top');
     expect(page).toContain('aspect-ratio: 16 / 9;');
     expect(page).toContain('object-fit: cover;');
-    expect(page).toContain('-webkit-line-clamp: 2;');
     expect(page).toContain('target="_blank"');
     expect(page).toContain('box-shadow: 0 20px 60px rgba(160, 60, 100, 0.08);');
     expect(page).toContain('.pick-badge');
     expect(page).toContain('.pick-card-featured');
+    expect(page).toContain('const hasItems = category.items.length > 0;');
+    expect(page).toContain('class="pick-empty"');
+    expect(page).toContain('data-label-zh={emptyState.zh}');
+    expect(page).toContain('data-label-ja={emptyState.ja}');
+    expect(page).toContain('data-label-en={emptyState.en}');
+    expect(page).toContain('{emptyState.zh}');
+    expect(page).toContain("window.matchMedia('(max-width: 767px)').matches");
+    expect(page).toContain(".pick-card[data-expanded='true'] .pick-description");
+    expect(page).toContain('.pick-card:hover .pick-description');
+    expect(page).toContain("window.open(url, '_blank', 'noopener,noreferrer')");
+    expect(page).toContain('.pick-open-link {\n    display: none;');
   });
 
   it('skips the image request entirely when a pick cover is missing', () => {
