@@ -69,7 +69,18 @@
           "description": "你不要奏啊😭😭😭别奏好不好😭😭😭坏女人😭😭😭",
           "cover": "/media/picks/koikakeru.avif",
           "url": "https://store.steampowered.com/app/2242710/_/",
-          "tags": ["Galgame", "剧情", "恋爱", "新岛夕"]
+          "tags": ["Galgame", "剧情", "新岛夕"]
+        },
+        {
+          "title": {
+            "zh": "恋爱成双",
+            "ja": "フタマタ恋愛",
+            "display": ["zh", "ja"]
+          },
+          "description": "真正的神人大作战，从头笑到尾",
+          "cover": "/media/picks/futamata.avif",
+          "url": "https://store.steampowered.com/app/3113990/_/",
+          "tags": ["Galgame", "废萌", "校园", "搞笑"]
         }
       ]
     },
