@@ -2,6 +2,10 @@ import type { CollectionEntry } from 'astro:content';
 
 export type BlogEntry = CollectionEntry<'blog'>;
 
+export function getBlogSlug(id: string): string {
+  return id.replace(/\.md$/, '');
+}
+
 export function sortBlogPosts(posts: BlogEntry[]): BlogEntry[] {
   return [...posts].sort(
     (left, right) => right.data.date.getTime() - left.data.date.getTime(),

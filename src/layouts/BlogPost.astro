@@ -2,7 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Giscus from '../components/Giscus.astro';
 import SubpageActions from '../components/SubpageActions.astro';
-import { formatBlogDate, type BlogEntry } from '../utils/blog';
+import { formatBlogDate, getBlogSlug, type BlogEntry } from '../utils/blog';
 
 interface Props {
   post: BlogEntry;
@@ -11,6 +11,7 @@ interface Props {
 }
 
 const { post, previous, next } = Astro.props;
+const cover = post.data.cover;
 ---
 
 <BaseLayout
@@ -25,8 +26,21 @@ const { post, previous, next } = Astro.props;
       <SubpageActions backFallback="/blog" />
 
       <header class="post-header">
-        <p class="post-date">{formatBlogDate(post.data.date)}</p>
-        <h1>{post.data.title}</h1>
+        <div class="post-kicker">
+          <span>FIELD NOTES / TRAVEL</span>
+          <span>{formatBlogDate(post.data.date)}</span>
+        </div>
+        <div class="post-title-block">
+          <div>
+            <p class="post-date">{formatBlogDate(post.data.date)}</p>
+            <h1>{post.data.title}</h1>
+            <p class="post-description">{post.data.description}</p>
+          </div>
+          <div class="post-meta" aria-label="文章信息">
+            {post.data.readingTime && <span>{post.data.readingTime} MIN READ</span>}
+            <span>{post.data.tags.length} TAGS</span>
+          </div>
+        </div>
         {
           post.data.tags.length > 0 && (
             <div class="post-tags">
@@ -36,9 +50,17 @@ const { post, previous, next } = Astro.props;
             </div>
           )
         }
+        {cover && (
+          <figure class="post-cover">
+            <img src={cover} alt={`${post.data.title} 封面`} loading="eager" />
+            <figcaption>Singapore / 2026</figcaption>
+          </figure>
+        )}
       </header>
 
-      <section class="post-content prose prose-invert prose-sakura">
+      <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+      <section class="post-content prose prose-invert prose-sakura" data-post-content>
         <slot />
       </section>
 
@@ -46,7 +68,7 @@ const { post, previous, next } = Astro.props;
         <div class="post-pagination-item">
           {
             previous && (
-              <a href={`/blog/${previous.id}`}>
+                <a href={`/blog/${getBlogSlug(previous.id)}`}>
                 <span class="direction">← Previous</span>
                 <span class="title">{previous.data.title}</span>
               </a>
@@ -56,7 +78,7 @@ const { post, previous, next } = Astro.props;
         <div class="post-pagination-item align-right">
           {
             next && (
-              <a href={`/blog/${next.id}`}>
+                <a href={`/blog/${getBlogSlug(next.id)}`}>
                 <span class="direction">Next →</span>
                 <span class="title">{next.data.title}</span>
               </a>
@@ -67,8 +89,67 @@ const { post, previous, next } = Astro.props;
 
       <Giscus />
     </article>
+    <button class="post-top" type="button" data-post-top aria-label="返回顶部" title="返回顶部">↑</button>
+    <div class="post-lightbox" data-post-lightbox hidden role="dialog" aria-modal="true" aria-label="图片预览">
+      <button type="button" data-post-lightbox-close aria-label="关闭图片预览" title="关闭">×</button>
+      <img data-post-lightbox-image alt="" />
+    </div>
   </main>
 </BaseLayout>
+
+<script>
+  function initBlogPostInteractions() {
+    const content = document.querySelector<HTMLElement>('[data-post-content]');
+    const progress = document.querySelector<HTMLElement>('.reading-progress span');
+    const topButton = document.querySelector<HTMLButtonElement>('[data-post-top]');
+    const lightbox = document.querySelector<HTMLElement>('[data-post-lightbox]');
+    const lightboxImage = document.querySelector<HTMLImageElement>('[data-post-lightbox-image]');
+    const closeButton = document.querySelector<HTMLButtonElement>('[data-post-lightbox-close]');
+
+    if (!content || !progress || !topButton || !lightbox || !lightboxImage || !closeButton) return;
+    if (content.dataset.interactionsReady === 'true') return;
+    content.dataset.interactionsReady = 'true';
+
+    const updateScroll = () => {
+      const top = content.getBoundingClientRect().top + window.scrollY;
+      const height = Math.max(1, content.offsetHeight - window.innerHeight * 0.42);
+      const ratio = (window.scrollY - top + window.innerHeight * 0.25) / height;
+      progress.style.width = `${Math.min(100, Math.max(0, ratio * 100))}%`;
+      topButton.classList.toggle('is-visible', window.scrollY > 720);
+    };
+
+    const closeLightbox = () => {
+      lightbox.hidden = true;
+      lightboxImage.removeAttribute('src');
+      document.body.style.overflow = '';
+    };
+
+    content.querySelectorAll<HTMLImageElement>('img').forEach((image) => {
+      image.addEventListener('click', () => {
+        lightboxImage.src = image.currentSrc || image.src;
+        lightboxImage.alt = image.alt;
+        lightbox.hidden = false;
+        document.body.style.overflow = 'hidden';
+        closeButton.focus();
+      });
+    });
+
+    closeButton.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !lightbox.hidden) closeLightbox();
+    });
+    topButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    updateScroll();
+  }
+
+  document.addEventListener('astro:page-load', initBlogPostInteractions);
+  document.addEventListener('astro:after-swap', initBlogPostInteractions);
+  initBlogPostInteractions();
+</script>
 
 <style>
   .blog-post-layout {
@@ -177,5 +258,167 @@ const { post, previous, next } = Astro.props;
     .post-pagination-item.align-right {
       text-align: left;
     }
+  }
+</style>
+
+<style>
+  .blog-post-layout {
+    position: relative;
+    padding: 5.5rem 1.5rem 7rem;
+  }
+
+  .post-shell {
+    position: relative;
+    width: min(100%, 78rem);
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  :global(.post-shell .subpage-actions) {
+    position: relative;
+    z-index: 4;
+    margin-bottom: 2.2rem;
+  }
+
+  :global(.post-shell .subpage-action) {
+    border-color: rgba(245, 184, 204, 0.2);
+    background: rgba(13, 8, 16, 0.62);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(14px);
+  }
+
+  .post-header { position: relative; margin-bottom: 5rem; }
+
+  .post-kicker {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 1.2rem;
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .post-title-block {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 2rem;
+    padding: 2.5rem clamp(1.3rem, 4vw, 4rem) 2.8rem;
+    border-top: 1px solid rgba(245, 184, 204, 0.2);
+    border-bottom: 1px solid rgba(245, 184, 204, 0.1);
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01));
+  }
+
+  .post-title-block::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6rem;
+    height: 2px;
+    background: var(--sakura-400);
+    content: '';
+  }
+
+  .post-date { margin: 0 0 0.8rem; font-size: 0.7rem; }
+
+  .post-title-block h1 {
+    margin: 0;
+    color: var(--text-heading);
+    font-family: 'Zen Old Mincho', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+  }
+
+  .post-description {
+    max-width: 42rem;
+    margin: 1.25rem 0 0;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    line-height: 1.9;
+  }
+
+  .post-meta {
+    display: grid;
+    gap: 0.45rem;
+    align-self: end;
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.13em;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .post-tags { margin: 1.4rem clamp(1.3rem, 4vw, 4rem) 0; }
+  .post-tags a { border-radius: 999px; }
+
+  .post-cover {
+    position: relative;
+    min-height: min(40rem, 63vh);
+    margin: 3.3rem 0 0;
+    overflow: hidden;
+    border: 1px solid rgba(245, 184, 204, 0.16);
+    background: var(--bg-surface);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.28);
+  }
+
+  .post-cover::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: '';
+    background: linear-gradient(180deg, rgba(10, 6, 8, 0.05), rgba(10, 6, 8, 0.56));
+  }
+
+  .post-cover img { width: 100%; height: min(40rem, 63vh); object-fit: cover; object-position: center 56%; }
+  .post-cover figcaption { position: absolute; right: 1.2rem; bottom: 1rem; z-index: 1; color: rgba(255, 240, 245, 0.72); font-family: 'Noto Sans JP', sans-serif; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; }
+
+  .reading-progress { position: sticky; top: 0; z-index: 8; width: 100%; height: 2px; margin: 0 0 2.6rem; background: rgba(220, 160, 190, 0.08); }
+  .reading-progress span { display: block; width: 0; height: 100%; background: var(--sakura-400); transition: width 80ms linear; }
+
+  .post-content { max-width: 52rem; margin: 0 auto; font-size: 1.02rem; line-height: 2.04; }
+  .post-content :global(> h1:first-child) { display: none; }
+  .post-content :global(h2) { margin-top: 5.6rem; padding-top: 1.1rem; border-top: 1px solid rgba(220, 160, 190, 0.18); font-family: 'Zen Old Mincho', serif; font-size: clamp(1.65rem, 3vw, 2.4rem); font-weight: 400; letter-spacing: 0.06em; }
+  .post-content :global(h3) { margin-top: 5.3rem; padding-top: 1rem; border-top: 2px solid var(--sakura-400); color: var(--text-emphasis); font-family: 'Noto Sans JP', sans-serif; font-size: clamp(1.05rem, 2vw, 1.4rem); font-weight: 500; letter-spacing: 0.08em; line-height: 1.55; }
+  .post-content :global(h3)::before { display: block; margin-bottom: 0.6rem; color: var(--text-muted); content: 'TRAVEL LOG'; font-size: 0.58rem; letter-spacing: 0.22em; }
+  .post-content :global(> h2:first-of-type + ul) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 2.5rem; margin: 1.5rem 0 5rem; padding: 1.15rem 1.5rem; border: 1px solid rgba(220, 160, 190, 0.12); background: rgba(255, 255, 255, 0.025); font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem; line-height: 1.75; }
+  .post-content :global(> h2:first-of-type + ul ul) { display: contents; }
+  .post-content :global(p:has(> img)) { max-width: 58rem; margin-right: -3rem; margin-left: -3rem; }
+  .post-content :global(img) { display: block; width: auto; max-width: 100%; max-height: 72vh; margin: 2.2rem auto 3rem; cursor: zoom-in; object-fit: contain; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24); transition: transform 220ms ease, box-shadow 220ms ease; }
+  .post-content :global(img:hover) { transform: translateY(-3px); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34); }
+  .post-content :global(blockquote) { margin-top: 4rem; padding: 0.4rem 0 0.4rem 1.4rem; border-left-color: var(--sakura-400); color: var(--text-soft); font-size: 0.88rem; }
+
+  .post-pagination { max-width: 52rem; margin: 5rem auto 0; }
+
+  .post-top { position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 25; display: grid; width: 2.8rem; height: 2.8rem; place-items: center; border: 1px solid var(--panel-border); border-radius: 50%; background: var(--panel-bg-strong); color: var(--text-heading); cursor: pointer; font-size: 1.2rem; opacity: 0; pointer-events: none; transform: translateY(0.5rem); transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.25s ease; }
+  .post-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .post-top:hover { border-color: var(--panel-border-strong); }
+
+  .post-lightbox { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 3.5rem 2rem; background: rgba(5, 3, 6, 0.9); backdrop-filter: blur(10px); }
+  .post-lightbox[hidden] { display: none; }
+  .post-lightbox img { max-width: 94vw; max-height: 90vh; object-fit: contain; box-shadow: 0 28px 90px rgba(0, 0, 0, 0.5); }
+  .post-lightbox button { position: absolute; top: 1.2rem; right: 1.4rem; width: 2.8rem; height: 2.8rem; border: 1px solid rgba(255, 240, 245, 0.3); border-radius: 50%; background: rgba(255, 240, 245, 0.08); color: var(--text-heading); cursor: pointer; font-size: 1.5rem; }
+
+  @media (max-width: 767px) {
+    .blog-post-layout { padding-top: 6rem; }
+    .post-pagination { grid-template-columns: 1fr; }
+    .post-pagination-item.align-right { text-align: left; }
+    .post-kicker { font-size: 0.52rem; }
+    .post-title-block { grid-template-columns: 1fr; gap: 1.3rem; padding: 1.6rem 1rem 1.8rem; }
+    .post-meta { display: flex; gap: 1rem; text-align: left; }
+    .post-tags { margin-right: 1rem; margin-left: 1rem; }
+    .post-cover { min-height: 24rem; margin-top: 2.4rem; }
+    .post-cover img { height: 24rem; }
+    .post-content { font-size: 0.98rem; line-height: 1.9; }
+    .post-content :global(p:has(> img)) { margin-right: 0; margin-left: 0; }
+    .post-content :global(img) { max-height: 62vh; margin-top: 1.6rem; margin-bottom: 2.2rem; }
+    .post-content :global(> h2:first-of-type + ul) { grid-template-columns: 1fr; gap: 0.45rem; margin-bottom: 3.8rem; }
+    .post-top { right: 1rem; bottom: 1rem; }
   }
 </style>

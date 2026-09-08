@@ -1,5 +1,5 @@
 ---
-import { formatBlogDate } from '../utils/blog';
+import { formatBlogDate, getBlogSlug } from '../utils/blog';
 
 interface Props {
   title: string;
@@ -17,7 +17,7 @@ const {
   slug,
 } = Astro.props;
 
-const href = `/blog/${slug}`;
+const href = `/blog/${getBlogSlug(slug)}`;
 ---
 
 <article class="blog-card">
