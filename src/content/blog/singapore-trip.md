@@ -9,9 +9,11 @@ tags:
 draft: false
 cover: /media/blog/singapore/IMG_20260831_214507.jpg
 readingTime: 12
+eyebrow: FIELD NOTES / TRAVEL
+sectionLabel: TRAVEL LOG
+coverCaption: SINGAPORE / 2026
+toc: true
 ---
-
-# 新加坡出行Blog
 
 ## 目录
 
